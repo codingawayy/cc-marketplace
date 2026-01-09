@@ -29,24 +29,28 @@
   {{/* Top-level map without name/description - render as sections in preferred order */}}
   {{- $preferredOrder := slice "fields" "enums" "types" -}}
   {{- $renderedKeys := slice -}}
+  {{/* Extract enums and types for context */}}
+  {{- $enums := index $data "enums" | default dict -}}
+  {{- $types := index $data "types" | default dict -}}
   <div class="space-y-8">
     {{/* Render keys in preferred order first */}}
     {{- range $preferredOrder -}}
       {{- $key := . -}}
       {{- with index $data $key -}}
       {{- $renderedKeys = $renderedKeys | append $key -}}
-    <section>
+    <section id="{{ $key }}">
       <h2 class="text-xl font-semibold mb-4 capitalize">{{ $key }}</h2>
-      {{ partial "yaml-render-nested.html" . }}
+      {{/* Pass context for fields section to resolve enum/type links */}}
+      {{ partial "yaml-render-nested.html" (dict "data" . "enums" $enums "types" $types "section" $key) }}
     </section>
       {{- end -}}
     {{- end -}}
     {{/* Render any remaining keys not in preferred order */}}
     {{- range $key, $value := $data -}}
       {{- if not (in $renderedKeys $key) -}}
-    <section>
+    <section id="{{ $key }}">
       <h2 class="text-xl font-semibold mb-4 capitalize">{{ $key }}</h2>
-      {{ partial "yaml-render-nested.html" $value }}
+      {{ partial "yaml-render-nested.html" (dict "data" $value "enums" $enums "types" $types "section" $key) }}
     </section>
       {{- end -}}
     {{- end -}}

@@ -32,7 +32,7 @@ properties:
           description: Field name
         type:
           type: string
-          description: "Field type (string, text, number, boolean, datetime, date, enum, object, or reference<Entity>). Append ? for optional."
+          description: "Field type (string, text, number, boolean, datetime, date, enum<enumName>, object, or reference<Entity>). Append ? for optional."
         description:
           type: string
           description: Description of this field

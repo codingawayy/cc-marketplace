@@ -23,7 +23,9 @@
 {{/* Process all YAML spec files */}}
 {{ range resources.Match "specs/**/*.yaml" }}
   {{ $data := . | transform.Unmarshal }}
-  {{ $relativePath := .Name | strings.TrimPrefix "specs/" }}
+  {{/* Normalize path: handle leading slash and Windows separators */}}
+  {{ $normalizedName := .Name | replaceRE `\\` "/" }}
+  {{ $relativePath := $normalizedName | strings.TrimPrefix "/" | strings.TrimPrefix "specs/" }}
   {{ $path := $relativePath | strings.TrimSuffix ".yaml" }}
 
   {{/* Track sections for index page generation */}}

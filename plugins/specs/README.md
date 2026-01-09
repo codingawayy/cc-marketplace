@@ -95,7 +95,7 @@ fields:
     type: string
     description: Name of the event
   - name: category
-    type: enum
+    type: enum<category>
     description: Category of the event
 types:
   Link:
@@ -187,7 +187,7 @@ Use these standard types for entity fields:
 | `boolean`           | True/false                                   |
 | `datetime`          | Date and time                                |
 | `date`              | Date only                                    |
-| `enum`              | One of a predefined set of values            |
+| `enum<enumName>`    | One of a predefined set of values            |
 | `[Type]`            | Array of values (e.g., `[string]`, `[Link]`) |
 | `object`            | Nested structure                             |
 | `reference<Entity>` | Reference to another entity                  |

@@ -1,4 +1,16 @@
+{{/* Handle both direct data and context dict */}}
+{{- $ctx := . -}}
 {{- $data := . -}}
+{{- $enums := dict -}}
+{{- $types := dict -}}
+{{- $section := "" -}}
+{{- if and (reflect.IsMap $ctx) (isset $ctx "data") -}}
+  {{- $data = $ctx.data -}}
+  {{- $enums = $ctx.enums | default dict -}}
+  {{- $types = $ctx.types | default dict -}}
+  {{- $section = $ctx.section | default "" -}}
+{{- end -}}
+
 {{- if reflect.IsMap $data -}}
   {{- $hasName := isset $data "name" -}}
   {{- $hasDesc := isset $data "description" -}}
@@ -68,9 +80,40 @@
       </thead>
       <tbody>
         {{- range $data -}}
+        {{- $fieldName := .name -}}
+        {{- $fieldType := .type -}}
+        {{- $enumName := "" -}}
+        {{- $typeDisplay := $fieldType -}}
+        {{- $typeLink := "" -}}
+        {{- $isOptional := strings.HasSuffix $fieldType "?" -}}
+        {{- $cleanType := $fieldType | strings.TrimSuffix "?" -}}
+        {{/* Parse enum<enumName> format */}}
+        {{- if strings.HasPrefix $cleanType "enum<" -}}
+          {{- $enumName = $cleanType | strings.TrimPrefix "enum<" | strings.TrimSuffix ">" -}}
+          {{- if index $enums $enumName -}}
+            {{- $typeDisplay = $enumName | title -}}
+            {{- if $isOptional -}}
+              {{- $typeDisplay = printf "%s?" ($enumName | title) -}}
+            {{- end -}}
+            {{- $typeLink = "#enums" -}}
+          {{- end -}}
+        {{- end -}}
+        {{/* Check if type references a custom type like [Link] */}}
+        {{- if and (not $typeLink) (strings.HasPrefix $fieldType "[") -}}
+          {{- $innerType := $fieldType | strings.TrimPrefix "[" | strings.TrimSuffix "]" -}}
+          {{- if index $types $innerType -}}
+            {{- $typeLink = "#types" -}}
+          {{- end -}}
+        {{- end -}}
         <tr>
-          <td><code class="text-sm font-medium">{{ .name }}</code></td>
-          <td><code class="text-xs px-1.5 py-0.5 bg-base-300 rounded text-base-content/60">{{ .type }}</code></td>
+          <td><code class="text-sm font-medium">{{ $fieldName }}</code></td>
+          <td>
+            {{- if $typeLink -}}
+            <a href="{{ $typeLink }}" class="link link-primary"><code class="text-xs px-1.5 py-0.5 bg-base-300 rounded">{{ $typeDisplay }}</code></a>
+            {{- else -}}
+            <code class="text-xs px-1.5 py-0.5 bg-base-300 rounded text-base-content/60">{{ $typeDisplay }}</code>
+            {{- end -}}
+          </td>
           <td class="text-base-content/70">{{ .description }}</td>
         </tr>
         {{- end -}}
