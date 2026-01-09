@@ -1,64 +1,35 @@
 # CC Marketplace
 
-Personal Claude Code plugin marketplace.
+This repository is a Claude Code **plugin marketplace**. These plugins are part of my own dev workflow that I use across different projects.
 
-## Installation
+## Available Plugins
+
+- [git](./plugins/git/) - Streamlined git workflows
+- [specs](./plugins/specs/) - Generate and browse system specification documents from codebase analysis
+
+## Usage
 
 Add this marketplace to Claude Code:
-
 ```
 /plugin marketplace add codingawayy/cc-marketplace
 ```
 
-## Available Plugins
-
-| Plugin | Description | Install |
-|--------|-------------|---------|
-| [specs](./plugins/specs/) | Generate and browse system specification documents from codebase analysis | `/plugin install specs@cc-marketplace` |
-
-## Repository Structure
-
+Install a plugin:
 ```
-cc-marketplace/
-├── .claude-plugin/
-│   └── marketplace.json    # Plugin registry
-├── plugins/
-│   └── specs/              # Specs plugin
-│       ├── .claude-plugin/
-│       │   └── plugin.json
-│       ├── commands/       # Slash commands
-│       ├── hooks/          # Event hooks
-│       ├── schemas/        # YAML schemas
-│       ├── scripts/        # PowerShell scripts
-│       ├── site/           # Hugo site for browsing specs
-│       └── README.md
-├── LICENSE
-└── README.md
+/plugin install <plugin-name>@cc-marketplace
 ```
 
-## Adding New Plugins
+After installing, plugin commands become available. Use `/help` to see all available commands.
 
-1. Create a new directory under `plugins/`:
-   ```
-   plugins/my-plugin/
-   ├── .claude-plugin/
-   │   └── plugin.json
-   ├── commands/
-   │   └── my-command.md
-   └── README.md
-   ```
+Uninstall a plugin:
+```
+/plugin uninstall <plugin-name>
+```
 
-2. Add an entry to `.claude-plugin/marketplace.json`:
-   ```json
-   {
-     "name": "my-plugin",
-     "description": "What it does",
-     "version": "1.0.0",
-     "source": "./plugins/my-plugin",
-     "category": "general",
-     "tags": ["tag1", "tag2"]
-   }
-   ```
+Remove this marketplace:
+```
+/plugin marketplace remove cc-marketplace
+```
 
 ## License
 

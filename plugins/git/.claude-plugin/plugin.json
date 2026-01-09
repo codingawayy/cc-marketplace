@@ -1,0 +1,12 @@
+{
+  "name": "git",
+  "version": "1.0.0",
+  "description": "Git workflow commands with conventional commits",
+  "author": {
+    "name": "codingawayy",
+    "email": "418400+codingawayy@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "keywords": ["git", "commit", "conventional-commits"],
+  "repository": "https://github.com/codingawayy/cc-marketplace"
+}
