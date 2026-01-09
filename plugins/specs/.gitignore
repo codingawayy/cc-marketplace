@@ -1,0 +1,9 @@
+# Node.js
+node_modules/
+
+# Hugo build artifacts
+site/public/
+site/resources/
+site/.hugo_build.lock
+site/hugo_stats.json
+site/mount.toml

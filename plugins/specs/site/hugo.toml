@@ -1,0 +1,32 @@
+baseURL = 'http://localhost:1313/'
+languageCode = 'en-us'
+title = 'System Specifications'
+
+[params]
+  description = 'Generated system specification documentation'
+
+[build]
+  [build.buildStats]
+    enable = true
+
+[module]
+  [module.hugoVersion]
+    extended = true
+
+[menu]
+  [[menu.main]]
+    name = 'Domain'
+    url = '/domain/'
+    weight = 1
+  [[menu.main]]
+    name = 'Tasks'
+    url = '/tasks/'
+    weight = 2
+  [[menu.main]]
+    name = 'Services'
+    url = '/external-services/'
+    weight = 3
+  [[menu.main]]
+    name = 'Apps'
+    url = '/apps/'
+    weight = 4

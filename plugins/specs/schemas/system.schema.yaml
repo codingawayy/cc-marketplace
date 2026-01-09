@@ -1,0 +1,46 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: System
+description: System specification defining global roles and storage mechanisms
+type: object
+required:
+  - name
+  - description
+  - users
+  - storage
+properties:
+  name:
+    type: string
+    description: System name
+  description:
+    type: string
+    description: Brief description of what this system does and who it's for
+  users:
+    type: array
+    description: List of global roles in the system
+    items:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Role identifier
+        description:
+          type: string
+          description: Description of this global role
+  storage:
+    type: array
+    description: List of storage mechanisms used by the system
+    items:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Storage identifier
+        description:
+          type: string
+          description: Description of this storage mechanism

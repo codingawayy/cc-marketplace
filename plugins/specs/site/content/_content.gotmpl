@@ -1,0 +1,116 @@
+{{/*
+  Content Adapter: Dynamically generates Hugo pages from YAML spec files.
+
+  Expects specs to be mounted at assets/specs/ via hugo config:
+    [module]
+    [[module.mounts]]
+      source = "/path/to/project/specs"
+      target = "assets/specs"
+*/}}
+
+{{/* Section definitions for generating index pages */}}
+{{ $sections := dict
+  "domain" (dict "title" "Domain" "description" "Domain entities and their actions")
+  "tasks" (dict "title" "Tasks" "description" "Scheduled and background jobs")
+  "external-services" (dict "title" "External Services" "description" "Third-party API integrations")
+  "apps" (dict "title" "Applications" "description" "Application modules")
+}}
+
+{{/* Track which sections and entity folders exist */}}
+{{ $existingSections := dict }}
+{{ $entityFolders := dict }}
+
+{{/* Process all YAML spec files */}}
+{{ range resources.Match "specs/**/*.yaml" }}
+  {{ $data := . | transform.Unmarshal }}
+  {{ $relativePath := .Name | strings.TrimPrefix "specs/" }}
+  {{ $path := $relativePath | strings.TrimSuffix ".yaml" }}
+
+  {{/* Track sections for index page generation */}}
+  {{ $parts := split $relativePath "/" }}
+  {{ if gt (len $parts) 0 }}
+    {{ $section := index $parts 0 }}
+    {{ $existingSections = merge $existingSections (dict $section true) }}
+
+    {{/* Track entity folders (domain/entity-name/) */}}
+    {{ if and (eq $section "domain") (gt (len $parts) 2) }}
+      {{ $entityName := index $parts 1 }}
+      {{ $entityFolders = merge $entityFolders (dict $entityName true) }}
+    {{ end }}
+  {{ end }}
+
+  {{/* Determine spec type from path */}}
+  {{ $specType := "spec" }}
+  {{ if hasPrefix $path "domain/" }}
+    {{ if strings.Contains $path "/actions/" }}
+      {{ $specType = "action" }}
+    {{ else }}
+      {{ $specType = "entity" }}
+    {{ end }}
+  {{ else if hasPrefix $path "tasks/" }}
+    {{ $specType = "task" }}
+  {{ else if hasPrefix $path "external-services/" }}
+    {{ $specType = "service" }}
+  {{ else if hasPrefix $path "apps/" }}
+    {{ $specType = "app" }}
+  {{ else if eq $path "system" }}
+    {{ $specType = "system" }}
+  {{ end }}
+
+  {{/* Get title from data or derive from filename */}}
+  {{ $title := "" }}
+  {{ with $data.name }}
+    {{ $title = . }}
+  {{ else }}
+    {{ $title = $path | path.BaseName | humanize | title }}
+  {{ end }}
+
+  {{/* Get description */}}
+  {{ $description := $data.description | default "" }}
+
+  {{/* Create the page */}}
+  {{ $page := dict
+    "path" $path
+    "title" $title
+    "kind" "page"
+    "params" (dict
+      "spec_type" $specType
+      "spec_data" $data
+      "description" $description
+    )
+  }}
+  {{ $.AddPage $page }}
+{{ end }}
+
+{{/* Generate section index pages */}}
+{{ range $section, $info := $sections }}
+  {{ if index $existingSections $section }}
+    {{ $page := dict
+      "path" $section
+      "title" (index $info "title")
+      "kind" "section"
+      "params" (dict "description" (index $info "description"))
+    }}
+    {{ $.AddPage $page }}
+  {{ end }}
+{{ end }}
+
+{{/* Generate entity folder index pages (domain/entity-name/) */}}
+{{ range $entityName, $_ := $entityFolders }}
+  {{ $page := dict
+    "path" (printf "domain/%s" $entityName)
+    "title" ($entityName | humanize | title)
+    "kind" "section"
+    "params" (dict "description" (printf "%s entity and related actions" $entityName))
+  }}
+  {{ $.AddPage $page }}
+
+  {{/* Also create actions subfolder index */}}
+  {{ $actionsPage := dict
+    "path" (printf "domain/%s/actions" $entityName)
+    "title" (printf "%s Actions" ($entityName | humanize | title))
+    "kind" "section"
+    "params" (dict "description" (printf "Operations available for %s" $entityName))
+  }}
+  {{ $.AddPage $actionsPage }}
+{{ end }}

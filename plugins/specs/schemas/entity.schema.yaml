@@ -1,0 +1,88 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Entity
+description: Domain entity specification defining fields, types, enums, and roles
+type: object
+required:
+  - name
+  - description
+  - storage
+  - fields
+properties:
+  name:
+    type: string
+    description: Entity name
+  description:
+    type: string
+    description: Detailed description of the entity, its purpose, and its role in the domain
+  storage:
+    type: string
+    description: Storage name (references a storage defined in the system spec)
+  fields:
+    type: array
+    description: List of fields in this entity
+    items:
+      type: object
+      required:
+        - name
+        - type
+        - description
+      properties:
+        name:
+          type: string
+          description: Field name
+        type:
+          type: string
+          description: "Field type (string, text, number, boolean, datetime, date, enum, object, or reference<Entity>). Append ? for optional."
+        description:
+          type: string
+          description: Description of this field
+  types:
+    type: object
+    description: Nested type definitions (for complex fields)
+    additionalProperties:
+      type: array
+      items:
+        type: object
+        required:
+          - name
+          - type
+          - description
+        properties:
+          name:
+            type: string
+          type:
+            type: string
+          description:
+            type: string
+  enums:
+    type: object
+    description: Enum definitions for enum-typed fields
+    additionalProperties:
+      type: array
+      items:
+        type: object
+        required:
+          - value
+          - description
+        properties:
+          value:
+            type: string
+            description: Enum value
+          description:
+            type: string
+            description: Description of this enum value
+  roles:
+    type: array
+    description: Context-based roles for this entity
+    items:
+      type: object
+      required:
+        - name
+        - description
+      properties:
+        name:
+          type: string
+          description: Role identifier
+        description:
+          type: string
+          description: Description of this context-based role

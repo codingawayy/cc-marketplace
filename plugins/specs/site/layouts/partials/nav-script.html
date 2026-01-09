@@ -1,0 +1,192 @@
+(function() {
+  'use strict';
+
+  // DOM Elements
+  const searchInput = document.getElementById('nav-search');
+  const clearButton = document.getElementById('nav-search-clear');
+  const noResults = document.getElementById('nav-no-results');
+  const sections = document.querySelectorAll('.spec-nav-section');
+
+  // Toggle section collapse/expand
+  function initSectionToggles() {
+    document.querySelectorAll('[data-toggle-section]').forEach(button => {
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        const content = this.nextElementSibling;
+        if (content) {
+          content.classList.toggle('is-collapsed', isExpanded);
+        }
+      });
+    });
+
+    document.querySelectorAll('[data-toggle-subsection]').forEach(button => {
+      button.addEventListener('click', function() {
+        const isExpanded = this.getAttribute('aria-expanded') === 'true';
+        this.setAttribute('aria-expanded', !isExpanded);
+        const content = this.nextElementSibling;
+        if (content) {
+          content.classList.toggle('is-collapsed', isExpanded);
+        }
+      });
+    });
+  }
+
+  // Search/filter functionality
+  function initSearch() {
+    if (!searchInput) return;
+
+    let debounceTimer;
+
+    searchInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(() => filterMenu(this.value), 150);
+
+      // Show/hide clear button
+      if (clearButton) {
+        clearButton.classList.toggle('is-hidden', !this.value);
+      }
+    });
+
+    if (clearButton) {
+      clearButton.addEventListener('click', function() {
+        searchInput.value = '';
+        searchInput.focus();
+        filterMenu('');
+        this.classList.add('is-hidden');
+      });
+    }
+
+    // Allow Escape to clear
+    searchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        this.value = '';
+        filterMenu('');
+        if (clearButton) {
+          clearButton.classList.add('is-hidden');
+        }
+      }
+    });
+
+    // Ctrl+K to focus search
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+        e.preventDefault();
+        searchInput.focus();
+        searchInput.select();
+      }
+    });
+  }
+
+  function filterMenu(query) {
+    const searchTerm = query.toLowerCase().trim();
+    let totalVisible = 0;
+
+    sections.forEach(section => {
+      const sectionContent = section.querySelector('.spec-nav-section-content');
+      const sectionHeader = section.querySelector('.spec-nav-section-header');
+
+      if (!sectionContent) return;
+
+      // Get all items in this section (both domain items and regular items)
+      const domainItems = section.querySelectorAll('.spec-nav-domain-item');
+      const items = section.querySelectorAll('.spec-nav-item');
+      const subItems = section.querySelectorAll('.spec-nav-subitem');
+      let sectionVisible = 0;
+
+      // Filter domain items
+      domainItems.forEach(item => {
+        const name = item.getAttribute('data-name') || '';
+        const linkText = item.textContent.toLowerCase();
+        const matches = searchTerm === '' ||
+                       name.includes(searchTerm) ||
+                       linkText.includes(searchTerm);
+
+        item.classList.toggle('is-hidden', !matches);
+        if (matches) sectionVisible++;
+      });
+
+      // Filter main items
+      items.forEach(item => {
+        const name = item.getAttribute('data-name') || '';
+        const linkText = item.textContent.toLowerCase();
+        const matches = searchTerm === '' ||
+                       name.includes(searchTerm) ||
+                       linkText.includes(searchTerm);
+
+        item.classList.toggle('is-hidden', !matches);
+        if (matches) sectionVisible++;
+      });
+
+      // Filter sub-items
+      subItems.forEach(item => {
+        const name = item.getAttribute('data-name') || '';
+        const linkText = item.textContent.toLowerCase();
+        const matches = searchTerm === '' ||
+                       name.includes(searchTerm) ||
+                       linkText.includes(searchTerm);
+
+        item.classList.toggle('is-hidden', !matches);
+      });
+
+      // Show/hide parent subsections if all children are hidden
+      section.querySelectorAll('.spec-nav-subsection').forEach(subsection => {
+        const visibleChildren = subsection.querySelectorAll('.spec-nav-subitem:not(.is-hidden)');
+        const subsectionHeader = subsection.querySelector('.spec-nav-subsection-header');
+
+        // Also check if the subsection header itself matches
+        const headerText = subsectionHeader ? subsectionHeader.textContent.toLowerCase() : '';
+        const headerMatches = searchTerm === '' || headerText.includes(searchTerm);
+
+        const parentItem = subsection.closest('.spec-nav-item');
+        if (visibleChildren.length === 0 && !headerMatches) {
+          if (parentItem) parentItem.classList.add('is-hidden');
+        } else {
+          if (parentItem) parentItem.classList.remove('is-hidden');
+        }
+      });
+
+      // Recalculate section visibility
+      const visibleDomainItems = section.querySelectorAll('.spec-nav-domain-item:not(.is-hidden)');
+      const visibleItems = section.querySelectorAll('.spec-nav-item:not(.is-hidden)');
+      sectionVisible = visibleDomainItems.length + visibleItems.length;
+      totalVisible += sectionVisible;
+
+      // Show/hide entire section
+      section.classList.toggle('is-hidden', sectionVisible === 0 && searchTerm !== '');
+
+      // Expand section if searching and has results
+      if (searchTerm !== '' && sectionVisible > 0) {
+        if (sectionHeader) sectionHeader.setAttribute('aria-expanded', 'true');
+        if (sectionContent) sectionContent.classList.remove('is-collapsed');
+
+        // Also expand subsections with visible results
+        section.querySelectorAll('.spec-nav-subsection-header').forEach(subHeader => {
+          const subContent = subHeader.nextElementSibling;
+          const visibleSubItems = subContent ? subContent.querySelectorAll('.spec-nav-subitem:not(.is-hidden)') : [];
+          if (visibleSubItems.length > 0) {
+            subHeader.setAttribute('aria-expanded', 'true');
+            if (subContent) subContent.classList.remove('is-collapsed');
+          }
+        });
+      }
+    });
+
+    // Show "no results" message
+    if (noResults) {
+      noResults.classList.toggle('is-hidden', totalVisible > 0 || searchTerm === '');
+    }
+  }
+
+  // Initialize on DOM ready
+  function init() {
+    initSectionToggles();
+    initSearch();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();

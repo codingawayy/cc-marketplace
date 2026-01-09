@@ -1,0 +1,43 @@
+{{ define "main" }}
+<article>
+  {{ with .GetPage "/system" }}
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
+  </header>
+
+  <div class="space-y-4">
+    {{ with .Params.spec_data }}
+      {{/* Filter out name and description since they're already in the header */}}
+      {{ $filtered := dict }}
+      {{ range $key, $value := . }}
+        {{ if and (ne $key "name") (ne $key "description") }}
+          {{ $filtered = merge $filtered (dict $key $value) }}
+        {{ end }}
+      {{ end }}
+      {{ if $filtered }}
+        {{ partial "yaml-render.html" $filtered }}
+      {{ end }}
+    {{ end }}
+  </div>
+  {{ else }}
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold">{{ .Site.Title }}</h1>
+    <p class="text-base-content/70 mt-2">{{ .Site.Params.description }}</p>
+  </header>
+
+  <section>
+    <h2 class="text-xl font-semibold mb-4">Sections</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      {{ range .Site.Menus.main }}
+      <a href="{{ .URL }}" class="card bg-base-200 hover:bg-base-300 transition-colors">
+        <div class="card-body">
+          <h3 class="card-title">{{ .Name }}</h3>
+        </div>
+      </a>
+      {{ end }}
+    </div>
+  </section>
+  {{ end }}
+</article>
+{{ end }}

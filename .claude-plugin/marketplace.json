@@ -1,0 +1,22 @@
+{
+  "name": "cc-marketplace",
+  "owner": {
+    "name": "codingawayy",
+    "email": "418400+codingawayy@users.noreply.github.com"
+  },
+  "metadata": {
+    "description": "Personal Claude Code plugin marketplace",
+    "version": "1.0.0",
+    "homepage": "https://github.com/codingawayy/cc-marketplace"
+  },
+  "plugins": [
+    {
+      "name": "specs",
+      "description": "Generate and browse system specification documents from codebase analysis",
+      "version": "1.0.0",
+      "source": "./plugins/specs",
+      "category": "documentation",
+      "tags": ["specs", "documentation", "yaml", "ddd"]
+    }
+  ]
+}

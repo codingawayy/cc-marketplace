@@ -1,0 +1,31 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: App
+description: Application specification defining an app within the system
+type: object
+required:
+  - name
+  - description
+  - applicationType
+  - users
+properties:
+  name:
+    type: string
+    description: Application name
+  description:
+    type: string
+    description: Detailed description of the app, its purpose, and target users
+  applicationType:
+    type: string
+    description: Type of application
+    enum:
+      - web
+      - cli
+      - mobile
+      - desktop
+      - api
+  users:
+    type: array
+    description: List of global roles that can access this app
+    items:
+      type: string
+      description: "Global role reference (e.g., user/visitor, user/admin)"

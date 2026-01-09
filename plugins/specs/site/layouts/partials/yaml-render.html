@@ -1,0 +1,64 @@
+{{- $data := . -}}
+{{- if reflect.IsMap $data -}}
+  {{- $hasName := isset $data "name" -}}
+  {{- $hasDesc := isset $data "description" -}}
+  {{- if or $hasName $hasDesc -}}
+  <div class="yaml-item">
+    {{- with $data.name }}<strong class="yaml-item-name">{{ . }}</strong>{{ end -}}
+    {{- with $data.description }}<span class="yaml-item-desc">{{ . }}</span>{{ end -}}
+    {{- $otherKeys := slice -}}
+    {{- range $key, $value := $data -}}
+      {{- if and (ne $key "name") (ne $key "description") -}}
+        {{- $otherKeys = $otherKeys | append $key -}}
+      {{- end -}}
+    {{- end -}}
+    {{- if $otherKeys -}}
+    <dl class="mt-2 space-y-2">
+      {{- range $key, $value := $data -}}
+      {{- if and (ne $key "name") (ne $key "description") -}}
+      <div class="bg-base-200 rounded-lg p-3">
+        <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">{{ $key }}</dt>
+        <dd>{{ partial "yaml-render.html" $value }}</dd>
+      </div>
+      {{- end -}}
+      {{- end -}}
+    </dl>
+    {{- end -}}
+  </div>
+  {{- else -}}
+  {{/* Top-level map without name/description - render as sections in preferred order */}}
+  {{- $preferredOrder := slice "fields" "enums" "types" -}}
+  {{- $renderedKeys := slice -}}
+  <div class="space-y-8">
+    {{/* Render keys in preferred order first */}}
+    {{- range $preferredOrder -}}
+      {{- $key := . -}}
+      {{- with index $data $key -}}
+      {{- $renderedKeys = $renderedKeys | append $key -}}
+    <section>
+      <h2 class="text-xl font-semibold mb-4 capitalize">{{ $key }}</h2>
+      {{ partial "yaml-render-nested.html" . }}
+    </section>
+      {{- end -}}
+    {{- end -}}
+    {{/* Render any remaining keys not in preferred order */}}
+    {{- range $key, $value := $data -}}
+      {{- if not (in $renderedKeys $key) -}}
+    <section>
+      <h2 class="text-xl font-semibold mb-4 capitalize">{{ $key }}</h2>
+      {{ partial "yaml-render-nested.html" $value }}
+    </section>
+      {{- end -}}
+    {{- end -}}
+  </div>
+  {{- end -}}
+{{- else if reflect.IsSlice $data -}}
+{{/* Render slice items in panels */}}
+<ul class="space-y-2">
+  {{- range $data -}}
+  <li class="bg-base-100 border border-base-300 rounded-lg p-3">{{ partial "yaml-render.html" . }}</li>
+  {{- end -}}
+</ul>
+{{- else -}}
+<span class="font-mono text-sm">{{ $data }}</span>
+{{- end -}}

@@ -1,0 +1,22 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Action
+description: Action specification defining operations that can be performed on an entity
+type: object
+required:
+  - name
+  - entity
+  - description
+  - authorization
+properties:
+  name:
+    type: string
+    description: Action name
+  entity:
+    type: string
+    description: Parent entity name
+  description:
+    type: string
+    description: Detailed description of the action, when it's triggered, and its purpose
+  authorization:
+    type: string
+    description: "Role expression defining who can perform this action (e.g., user/admin | user/developer)"

@@ -1,0 +1,50 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: External Service
+description: External service specification defining third-party APIs and services
+type: object
+required:
+  - name
+  - description
+  - provider
+  - documentation
+  - authentication
+properties:
+  name:
+    type: string
+    description: Service name
+  description:
+    type: string
+    description: Detailed description of the service and how it's used in this system
+  provider:
+    type: string
+    description: Provider/company name
+  documentation:
+    type: string
+    description: Link to official documentation
+    format: uri
+  authentication:
+    type: string
+    description: Authentication method
+    enum:
+      - api-key
+      - oauth2
+      - service-account
+      - none
+  usage:
+    type: string
+    description: Description of how and where this service is used in the system
+  rateLimits:
+    type: array
+    description: Rate limits and quotas
+    items:
+      type: object
+      required:
+        - limit
+        - value
+      properties:
+        limit:
+          type: string
+          description: Type of limit
+        value:
+          type: string
+          description: Limit value

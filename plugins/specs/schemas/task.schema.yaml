@@ -1,0 +1,26 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+title: Task
+description: Scheduled or async background task specification
+type: object
+required:
+  - name
+  - description
+  - schedule
+  - retryPolicy
+properties:
+  name:
+    type: string
+    description: Task name
+  description:
+    type: string
+    description: Detailed description of the task and its purpose
+  schedule:
+    type: string
+    description: "Cron expression or interval (e.g., '0 0 * * *' for daily at midnight, 'every 5m')"
+  retryPolicy:
+    type: string
+    description: How failures are handled
+    enum:
+      - none
+      - exponential-backoff
+      - indefinite

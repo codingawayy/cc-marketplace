@@ -1,0 +1,41 @@
+{{ define "main" }}
+<article>
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold">{{ .Title }}</h1>
+    {{ with .Description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
+  </header>
+
+  {{ if .Pages }}
+  <ul class="space-y-2">
+    {{ range .Pages }}
+    <li>
+      {{/* For sections, try to find the main entity page and use its description */}}
+      {{- $description := .Description -}}
+      {{- $specType := .Params.spec_type -}}
+      {{- if .IsSection -}}
+        {{- range .Pages -}}
+          {{- if eq .Params.spec_type "entity" -}}
+            {{- $description = .Description -}}
+            {{- $specType = "entity" -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+      <a href="{{ .RelPermalink }}" class="card bg-base-200 hover:bg-base-300 transition-colors">
+        <div class="card-body p-4">
+          <div class="flex items-center gap-3">
+            <span class="font-medium">{{ .Title }}</span>
+            {{ with $specType }}<span class="badge badge-ghost badge-sm">{{ . }}</span>{{ end }}
+          </div>
+          {{ with $description }}<p class="text-sm text-base-content/70">{{ . }}</p>{{ end }}
+        </div>
+      </a>
+    </li>
+    {{ end }}
+  </ul>
+  {{ else }}
+  <div class="alert">
+    <span>No items in this section.</span>
+  </div>
+  {{ end }}
+</article>
+{{ end }}

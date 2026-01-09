@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom component classes */
+@layer components {
+  .yaml-item {
+    @apply flex flex-col gap-1;
+  }
+
+  .yaml-item-name {
+    @apply font-semibold text-base-content;
+  }
+
+  .yaml-item-desc {
+    @apply text-base-content/70 text-sm;
+  }
+
+  /* ============================================
+     Custom Navigation Styles
+     ============================================ */
+
+  /* Main nav container */
+  .spec-nav {
+    @apply p-4 flex flex-col gap-2;
+  }
+
+  /* Search Input */
+  .spec-nav-search {
+    @apply relative mb-2;
+  }
+
+  .spec-nav-search-input {
+    @apply w-full px-3 py-2 text-sm rounded-lg border border-base-300 bg-base-100;
+    @apply placeholder:text-base-content/40;
+  }
+
+  .spec-nav-search-input:focus {
+    @apply outline-none ring-2 ring-primary/20 border-primary;
+  }
+
+  .spec-nav-search-clear {
+    @apply absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded;
+    @apply text-base-content/50 cursor-pointer;
+  }
+
+  .spec-nav-search-clear:hover {
+    @apply text-base-content bg-base-200;
+  }
+
+  /* Menu container */
+  .spec-nav-menu {
+    @apply flex flex-col gap-1;
+  }
+
+  /* Section (Domain, Tasks, Services, Apps) */
+  .spec-nav-section {
+    @apply flex flex-col;
+  }
+
+  .spec-nav-section.is-hidden {
+    @apply hidden;
+  }
+
+  .spec-nav-section-header {
+    @apply flex items-center justify-between w-full px-2 py-1.5 text-left;
+    @apply font-semibold text-sm text-base-content;
+    @apply rounded cursor-pointer;
+  }
+
+  .spec-nav-section-header:hover {
+    @apply bg-base-300/50;
+  }
+
+  .spec-nav-section-header[aria-expanded="false"] .spec-nav-chevron {
+    transform: rotate(-90deg);
+  }
+
+  .spec-nav-section-title {
+    @apply select-none;
+  }
+
+  .spec-nav-chevron {
+    @apply w-4 h-4 text-base-content/50;
+    transition: transform 0.2s ease;
+  }
+
+  /* Section content (collapsible) */
+  .spec-nav-section-content {
+    @apply overflow-hidden;
+  }
+
+  .spec-nav-section-content.is-collapsed {
+    @apply hidden;
+  }
+
+  /* Domain-specific list styling */
+  .spec-nav-domain-list {
+    @apply flex flex-col gap-0.5 pl-4 py-1;
+  }
+
+  .spec-nav-domain-item {
+    @apply flex items-center gap-2 py-0.5;
+  }
+
+  .spec-nav-domain-item.is-hidden {
+    @apply hidden;
+  }
+
+  /* Generic list styling (Tasks, Services, Apps) */
+  .spec-nav-list {
+    @apply flex flex-col gap-0.5 pl-4 py-1;
+  }
+
+  .spec-nav-item {
+    @apply flex flex-col;
+  }
+
+  .spec-nav-item.is-hidden {
+    @apply hidden;
+  }
+
+  /* Links */
+  .spec-nav-link {
+    @apply block px-2 py-1 text-sm text-base-content/80 rounded;
+  }
+
+  .spec-nav-link:hover {
+    @apply bg-base-300/50 text-base-content;
+  }
+
+  .spec-nav-link.is-active {
+    @apply font-semibold text-primary bg-primary/10;
+  }
+
+  /* Label (non-clickable) */
+  .spec-nav-label {
+    @apply block px-2 py-1 text-sm text-base-content/60;
+  }
+
+  /* Action icon (lightning bolt for Domain) */
+  .spec-nav-action-icon {
+    @apply p-0.5 rounded opacity-50;
+  }
+
+  .spec-nav-action-icon:hover {
+    @apply opacity-100;
+  }
+
+  .spec-nav-action-icon.is-active {
+    @apply opacity-100 text-primary;
+  }
+
+  .spec-nav-action-icon svg {
+    @apply w-4 h-4;
+  }
+
+  /* Subsections (nested items within Tasks/Services/Apps) */
+  .spec-nav-subsection {
+    @apply flex flex-col;
+  }
+
+  .spec-nav-subsection-header {
+    @apply flex items-center justify-between w-full px-2 py-1 text-left;
+    @apply text-sm text-base-content/80 rounded cursor-pointer;
+  }
+
+  .spec-nav-subsection-header:hover {
+    @apply bg-base-300/50 text-base-content;
+  }
+
+  .spec-nav-subsection-header.is-active {
+    @apply font-semibold text-primary;
+  }
+
+  .spec-nav-subsection-header[aria-expanded="false"] .spec-nav-chevron-sm {
+    transform: rotate(-90deg);
+  }
+
+  .spec-nav-chevron-sm {
+    @apply w-3 h-3 text-base-content/40;
+    transition: transform 0.2s ease;
+  }
+
+  .spec-nav-subsection-content {
+    @apply pl-3 overflow-hidden;
+  }
+
+  .spec-nav-subsection-content.is-collapsed {
+    @apply hidden;
+  }
+
+  .spec-nav-subitem {
+    @apply flex flex-col;
+  }
+
+  .spec-nav-subitem.is-hidden {
+    @apply hidden;
+  }
+
+  /* No results message */
+  .spec-nav-no-results {
+    @apply px-4 py-2 text-sm text-base-content/50 italic;
+  }
+
+  .spec-nav-no-results.is-hidden {
+    @apply hidden;
+  }
+
+  /* ============================================
+     Custom Table Styles
+     ============================================ */
+
+  .spec-table {
+    @apply w-full border-collapse;
+  }
+
+  .spec-table th,
+  .spec-table td {
+    @apply text-left px-4 py-3 border-b border-base-200;
+  }
+
+  .spec-table th {
+    @apply font-semibold text-base-content/80 bg-base-200;
+  }
+
+  .spec-table tbody tr:hover {
+    @apply bg-base-100;
+  }
+}

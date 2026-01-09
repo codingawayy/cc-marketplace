@@ -14,38 +14,51 @@ Add this marketplace to Claude Code:
 
 | Plugin | Description | Install |
 |--------|-------------|---------|
-| [specs](https://github.com/codingawayy/cc-specs-plugin) | Generate and browse system specification documents from codebase analysis | `/plugin install specs@cc-marketplace` |
+| [specs](./plugins/specs/) | Generate and browse system specification documents from codebase analysis | `/plugin install specs@cc-marketplace` |
+
+## Repository Structure
+
+```
+cc-marketplace/
+├── .claude-plugin/
+│   └── marketplace.json    # Plugin registry
+├── plugins/
+│   └── specs/              # Specs plugin
+│       ├── .claude-plugin/
+│       │   └── plugin.json
+│       ├── commands/       # Slash commands
+│       ├── hooks/          # Event hooks
+│       ├── schemas/        # YAML schemas
+│       ├── scripts/        # PowerShell scripts
+│       ├── site/           # Hugo site for browsing specs
+│       └── README.md
+├── LICENSE
+└── README.md
+```
 
 ## Adding New Plugins
 
-Edit `.claude-plugin/marketplace.json` to add plugin entries:
+1. Create a new directory under `plugins/`:
+   ```
+   plugins/my-plugin/
+   ├── .claude-plugin/
+   │   └── plugin.json
+   ├── commands/
+   │   └── my-command.md
+   └── README.md
+   ```
 
-**For external repos:**
-```json
-{
-  "name": "my-plugin",
-  "description": "What it does",
-  "version": "1.0.0",
-  "source": {
-    "source": "url",
-    "url": "https://github.com/user/my-plugin.git"
-  },
-  "category": "general",
-  "tags": ["tag1", "tag2"]
-}
-```
-
-**For local plugins:**
-```json
-{
-  "name": "my-plugin",
-  "description": "What it does",
-  "version": "1.0.0",
-  "source": "./plugins/my-plugin",
-  "category": "general",
-  "tags": ["tag1", "tag2"]
-}
-```
+2. Add an entry to `.claude-plugin/marketplace.json`:
+   ```json
+   {
+     "name": "my-plugin",
+     "description": "What it does",
+     "version": "1.0.0",
+     "source": "./plugins/my-plugin",
+     "category": "general",
+     "tags": ["tag1", "tag2"]
+   }
+   ```
 
 ## License
 

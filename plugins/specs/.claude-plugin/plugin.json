@@ -1,0 +1,12 @@
+{
+  "name": "specs",
+  "version": "1.0.0",
+  "description": "Generate and browse system specification documents from codebase analysis",
+  "author": {
+    "name": "codingawayy",
+    "email": "418400+codingawayy@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "keywords": ["specs", "documentation", "yaml", "ddd", "architecture"],
+  "repository": "https://github.com/codingawayy/cc-marketplace"
+}
