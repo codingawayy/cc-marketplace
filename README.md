@@ -4,8 +4,12 @@ This repository is a Claude Code **plugin marketplace**. These plugins are part 
 
 ## Available Plugins
 
-- [git](./plugins/git/) - Streamlined git workflows
-- [specs](./plugins/specs/) - Generate and browse system specification documents from codebase analysis
+| Plugin                    | Description                                        | Scope           |
+| ------------------------- | -------------------------------------------------- | --------------- |
+| [git](./plugins/git/)     | Streamlined git workflows                          | User or Project |
+| [specs](./plugins/specs/) | Generate and browse system specification documents | Project only    |
+
+Plugins with hooks can only be installed at the project level for security reasons, as hooks run automatically without user invocation.
 
 ## Usage
 
