@@ -17,6 +17,14 @@
       "source": "./plugins/specs",
       "category": "documentation",
       "tags": ["specs", "documentation", "yaml", "ddd"]
+    },
+    {
+      "name": "git",
+      "description": "Git workflow commands with conventional commits",
+      "version": "1.0.0",
+      "source": "./plugins/git",
+      "category": "development",
+      "tags": ["git", "commit", "conventional-commits"]
     }
   ]
 }
