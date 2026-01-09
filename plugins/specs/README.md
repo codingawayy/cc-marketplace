@@ -188,7 +188,7 @@ Use these standard types for entity fields:
 | `datetime`          | Date and time                                |
 | `date`              | Date only                                    |
 | `enum<enumName>`    | One of a predefined set of values            |
-| `[Type]`            | Array of values (e.g., `[string]`, `[Link]`) |
+| `Type[]`            | Array of values (e.g., `string[]`, `Link[]`) |
 | `object`            | Nested structure                             |
 | `reference<Entity>` | Reference to another entity                  |
 

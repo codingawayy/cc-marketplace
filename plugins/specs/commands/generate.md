@@ -17,7 +17,7 @@ Generate system specification YAML files by analyzing the codebase.
 
 Read the plugin folder (from `pluginPath`) to understand:
 - `README.md` - Documentation, examples, and conventions
-- `schemas/` - JSON Schema definitions for each spec type
+- `schemas/` - Schema definitions for each spec type
 
 ## Step 2: Discovery Phase
 
