@@ -22,6 +22,16 @@ Starts a local Hugo server to browse the generated specifications as a website.
 
 Requires Hugo to be installed. The server runs at http://localhost:1313.
 
+### `/specs:validate`
+
+Validates all specification files in `docs.specs/` against their JSON schemas.
+
+```
+/specs:validate
+```
+
+Reports validation errors with file paths and specific issues. Useful for catching schema violations before serving or sharing specs.
+
 ## Overview
 
 This plugin contains JSON Schema definitions for generating system specification documents. Following Domain-Driven Design (DDD) principles, these schemas define how to describe a software system in a way that is:

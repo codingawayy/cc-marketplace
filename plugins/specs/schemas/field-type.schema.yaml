@@ -1,0 +1,46 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "field-type.schema.yaml"
+title: Field Type
+description: |
+  Valid field type patterns for entity fields.
+
+  Patterns:
+  - Base types: string, text, number, boolean, datetime, date, object
+  - Parameterized: enum<enumName>, reference<EntityName>
+  - Array: TypeName[]
+  - Optional: append ? to any type
+
+$defs:
+  baseType:
+    type: string
+    pattern: "^(string|text|number|boolean|datetime|date|object)\\??$"
+    description: "Primitive field types with optional ? suffix"
+
+  enumType:
+    type: string
+    pattern: "^enum<[a-zA-Z][a-zA-Z0-9]*>\\??$"
+    description: "Enum reference: enum<enumName> with optional ? suffix"
+
+  referenceType:
+    type: string
+    pattern: "^reference<[a-zA-Z][a-zA-Z0-9]*>\\??$"
+    description: "Entity reference: reference<EntityName> with optional ? suffix"
+
+  arrayType:
+    type: string
+    pattern: "^(string|text|number|boolean|datetime|date|object|[a-zA-Z][a-zA-Z0-9]*)\\[\\]\\??$"
+    description: "Array of any type: string[], number[], TypeName[] with optional ? suffix"
+
+oneOf:
+  - $ref: "#/$defs/baseType"
+  - $ref: "#/$defs/enumType"
+  - $ref: "#/$defs/referenceType"
+  - $ref: "#/$defs/arrayType"
+
+examples:
+  - "string"
+  - "number?"
+  - "string[]"
+  - "enum<status>"
+  - "reference<User>"
+  - "Address[]"

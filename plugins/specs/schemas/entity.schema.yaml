@@ -31,8 +31,7 @@ properties:
           type: string
           description: Field name
         type:
-          type: string
-          description: "Field type (string, text, number, boolean, datetime, date, enum<enumName>, Type[], object, or reference<Entity>). Append ? for optional."
+          $ref: "field-type.schema.yaml"
         description:
           type: string
           description: Description of this field
@@ -51,7 +50,7 @@ properties:
           name:
             type: string
           type:
-            type: string
+            $ref: "field-type.schema.yaml"
           description:
             type: string
   enums:
