@@ -3,11 +3,15 @@ title: Entity
 description: Domain entity specification defining fields, types, enums, and roles
 type: object
 required:
+  - type
   - name
   - description
   - storage
   - fields
 properties:
+  type:
+    const: entity
+    description: Spec type for Hugo template selection
   name:
     type: string
     description: Entity name

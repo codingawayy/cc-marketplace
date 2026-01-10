@@ -11,9 +11,10 @@
   function initSectionToggles() {
     document.querySelectorAll('[data-toggle-section]').forEach(button => {
       button.addEventListener('click', function() {
-        const isExpanded = this.getAttribute('aria-expanded') === 'true';
-        this.setAttribute('aria-expanded', !isExpanded);
-        const content = this.nextElementSibling;
+        const header = this.closest('.spec-nav-section-header');
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+        header.setAttribute('aria-expanded', !isExpanded);
+        const content = header.nextElementSibling;
         if (content) {
           content.classList.toggle('is-collapsed', isExpanded);
         }

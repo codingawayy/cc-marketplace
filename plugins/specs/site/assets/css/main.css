@@ -63,13 +63,9 @@
   }
 
   .spec-nav-section-header {
-    @apply flex items-center justify-between w-full px-2 py-1.5 text-left;
+    @apply flex items-center justify-between w-full px-2 py-1.5;
     @apply font-semibold text-sm text-base-content;
-    @apply rounded cursor-pointer;
-  }
-
-  .spec-nav-section-header:hover {
-    @apply bg-base-300/50;
+    @apply rounded;
   }
 
   .spec-nav-section-header[aria-expanded="false"] .spec-nav-chevron {
@@ -77,7 +73,23 @@
   }
 
   .spec-nav-section-title {
-    @apply select-none;
+    @apply flex-1 text-left no-underline text-base-content;
+  }
+
+  .spec-nav-section-title:hover {
+    @apply text-primary;
+  }
+
+  .spec-nav-section-title.is-active {
+    @apply text-primary;
+  }
+
+  .spec-nav-chevron-btn {
+    @apply p-1 rounded cursor-pointer bg-transparent border-none;
+  }
+
+  .spec-nav-chevron-btn:hover {
+    @apply bg-base-300/50;
   }
 
   .spec-nav-chevron {

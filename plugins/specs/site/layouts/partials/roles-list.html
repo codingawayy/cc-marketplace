@@ -1,0 +1,17 @@
+{{/*
+  Render roles/users array as a list.
+
+  Input: Array of role objects with name and description
+*/}}
+{{ if . }}
+<ul class="space-y-2">
+  {{ range . }}
+  <li class="bg-base-100 border border-base-300 rounded-lg p-3">
+    <div class="yaml-item">
+      <strong class="yaml-item-name">{{ .name }}</strong>
+      {{ with .description }}<span class="yaml-item-desc">{{ . }}</span>{{ end }}
+    </div>
+  </li>
+  {{ end }}
+</ul>
+{{ end }}

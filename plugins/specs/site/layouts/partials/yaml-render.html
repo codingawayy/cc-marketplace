@@ -39,7 +39,10 @@
       {{- with index $data $key -}}
       {{- $renderedKeys = $renderedKeys | append $key -}}
     <section id="{{ $key }}">
+      {{/* Skip heading for fields since table is placed directly under main heading */}}
+      {{- if ne $key "fields" -}}
       <h2 class="text-xl font-semibold mb-4 capitalize">{{ $key }}</h2>
+      {{- end -}}
       {{/* Pass context for fields section to resolve enum/type links */}}
       {{ partial "yaml-render-nested.html" (dict "data" . "enums" $enums "types" $types "section" $key) }}
     </section>

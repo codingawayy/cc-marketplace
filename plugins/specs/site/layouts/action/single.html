@@ -1,0 +1,29 @@
+{{ define "main" }}
+<article>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "spec_type" "action"
+  ) }}
+
+  <div class="space-y-4">
+    {{ with .Params.spec_data.entity }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Entity</dt>
+      <dd class="font-mono text-sm">{{ . }}</dd>
+    </div>
+    {{ end }}
+
+    {{ with .Params.spec_data.authorization }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Authorization</dt>
+      <dd class="font-mono text-sm">{{ . }}</dd>
+    </div>
+    {{ end }}
+  </div>
+
+  {{ with .Content }}
+  <div class="prose mt-8">{{ . }}</div>
+  {{ end }}
+</article>
+{{ end }}

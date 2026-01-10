@@ -1,59 +1,5 @@
 {{ define "main" }}
 <article>
-  {{/* Check if this is an entity section page (has an entity child page) */}}
-  {{- $entityPage := false -}}
-  {{- $actionsSection := false -}}
-  {{- range .Pages -}}
-    {{- if eq .Params.spec_type "entity" -}}
-      {{- $entityPage = . -}}
-    {{- end -}}
-    {{- if and .IsSection (strings.HasSuffix .RelPermalink "/actions/") -}}
-      {{- $actionsSection = . -}}
-    {{- end -}}
-  {{- end -}}
-
-  {{ if $entityPage }}
-  {{/* Entity section page: show entity details inline with actions at bottom */}}
-  <header class="mb-8">
-    <div class="flex items-center gap-2 mb-2 flex-wrap">
-      {{ with $entityPage.Params.spec_data.storage }}<span class="badge badge-outline badge-sm">{{ . }}</span>{{ end }}
-    </div>
-    <h1 class="text-3xl font-bold">{{ $entityPage.Title }}</h1>
-    {{ with $entityPage.Params.description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
-  </header>
-
-  <div class="space-y-4">
-    {{ with $entityPage.Params.spec_data }}
-      {{/* Filter out name, description, and storage since they're already in the header */}}
-      {{ $filtered := dict }}
-      {{ range $key, $value := . }}
-        {{ if and (ne $key "name") (ne $key "description") (ne $key "storage") }}
-          {{ $filtered = merge $filtered (dict $key $value) }}
-        {{ end }}
-      {{ end }}
-      {{ if $filtered }}
-        {{ partial "yaml-render.html" $filtered }}
-      {{ end }}
-    {{ end }}
-  </div>
-
-  {{/* Actions section */}}
-  {{ if $actionsSection }}
-  <section class="mt-12">
-    <h2 class="text-xl font-semibold mb-4">Actions</h2>
-    <ul class="list-disc list-inside space-y-2">
-      {{ range $actionsSection.Pages }}
-      <li>
-        <a href="{{ .RelPermalink }}" class="link link-primary">{{ .Title }}</a>
-        {{ with .Params.description }}<span class="text-base-content/70"> - {{ . }}</span>{{ end }}
-      </li>
-      {{ end }}
-    </ul>
-  </section>
-  {{ end }}
-
-  {{ else }}
-  {{/* Normal list page */}}
   <header class="mb-8">
     <h1 class="text-3xl font-bold">{{ .Title }}</h1>
     {{ with .Params.description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
@@ -62,35 +8,32 @@
   {{ if .Pages }}
   <ul class="space-y-2">
     {{ range .Pages }}
+    {{/* Skip action sections in list views */}}
+    {{ if not (and .IsSection (strings.HasSuffix .RelPermalink "/actions/")) }}
     <li>
       {{/* For sections, try to find the main entity page and use its description */}}
       {{- $description := .Params.description -}}
-      {{- $specType := .Params.spec_type -}}
       {{- if .IsSection -}}
         {{- range .Pages -}}
           {{- if eq .Params.spec_type "entity" -}}
             {{- $description = .Params.description -}}
-            {{- $specType = "entity" -}}
           {{- end -}}
         {{- end -}}
       {{- end -}}
       <a href="{{ .RelPermalink }}" class="card bg-base-200 hover:bg-base-300 transition-colors">
         <div class="card-body p-4">
-          <div class="flex items-center gap-3">
-            <span class="font-medium">{{ .Title }}</span>
-            {{ with $specType }}{{ if ne . "entity" }}<span class="badge badge-ghost badge-sm">{{ . }}</span>{{ end }}{{ end }}
-          </div>
+          <span class="font-medium">{{ .Title }}</span>
           {{ with $description }}<p class="text-sm text-base-content/70">{{ . }}</p>{{ end }}
         </div>
       </a>
     </li>
+    {{ end }}
     {{ end }}
   </ul>
   {{ else }}
   <div class="alert">
     <span>No items in this section.</span>
   </div>
-  {{ end }}
   {{ end }}
 </article>
 {{ end }}

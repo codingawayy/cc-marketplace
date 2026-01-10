@@ -1,0 +1,38 @@
+{{ define "main" }}
+<article>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "badges" (slice .Params.spec_data.storage)
+  ) }}
+
+  <div class="space-y-8">
+    {{ with .Params.spec_data.fields }}
+      {{ partial "fields-table.html" (dict
+        "fields" .
+        "enums" $.Params.spec_data.enums
+        "types" $.Params.spec_data.types
+      ) }}
+    {{ end }}
+
+    {{ with .Params.spec_data.enums }}
+      {{ partial "enum-section.html" . }}
+    {{ end }}
+
+    {{ with .Params.spec_data.types }}
+      {{ partial "types-section.html" . }}
+    {{ end }}
+
+    {{ with .Params.spec_data.roles }}
+    <section id="roles">
+      <h2 class="text-xl font-semibold mb-4">Roles</h2>
+      {{ partial "roles-list.html" . }}
+    </section>
+    {{ end }}
+  </div>
+
+  {{ with .Content }}
+  <div class="prose mt-8">{{ . }}</div>
+  {{ end }}
+</article>
+{{ end }}

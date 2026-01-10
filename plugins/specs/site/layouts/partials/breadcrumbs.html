@@ -24,7 +24,9 @@
       {{- end }}
     {{- else }}
       {{- range .Ancestors.Reverse }}
+      {{- if not .IsHome }}
       <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{- end }}
       {{- end }}
       <li>{{ .Title }}</li>
     {{- end }}

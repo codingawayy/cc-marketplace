@@ -62,6 +62,7 @@ All schema files are located in the `schemas/` folder and use YAML format for re
 The system file defines global configuration: global roles and storage mechanisms.
 
 ```yaml
+type: system
 name: "Weekend Planner"
 description: "A system for automating weekend planning using AI."
 users:
@@ -81,6 +82,7 @@ storage:
 An app defines an application module and which roles can access it.
 
 ```yaml
+type: app
 name: "Website"
 description: "Public-facing SvelteKit web application."
 applicationType: "web"
@@ -94,6 +96,7 @@ users:
 An entity defines a domain object with its fields, nested types, enums, and context-based roles.
 
 ```yaml
+type: entity
 name: "Event"
 description: "A time-limited happening in a city."
 storage: "firestore"
@@ -126,6 +129,7 @@ roles:
 An action defines an operation on an entity, including who is authorized to perform it.
 
 ```yaml
+type: action
 name: "Research Events"
 entity: "Event"
 description: "Discovers and creates new events using AI with web search."
@@ -137,6 +141,7 @@ authorization: "user/admin | user/developer"
 A task defines a scheduled or background job with its schedule and retry behavior.
 
 ```yaml
+type: task
 name: "Daily Research"
 description: "Runs automated research for all configured cities."
 schedule: "0 0 * * *"
@@ -148,6 +153,7 @@ retryPolicy: "exponential-backoff"
 A service defines an external API dependency with its authentication method and usage.
 
 ```yaml
+type: service
 name: "Gemini AI"
 description: "Google's AI model for research and review tasks."
 provider: "Google"

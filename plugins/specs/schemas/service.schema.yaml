@@ -3,12 +3,16 @@ title: External Service
 description: External service specification defining third-party APIs and services
 type: object
 required:
+  - type
   - name
   - description
   - provider
   - documentation
   - authentication
 properties:
+  type:
+    const: service
+    description: Spec type for Hugo template selection
   name:
     type: string
     description: Service name

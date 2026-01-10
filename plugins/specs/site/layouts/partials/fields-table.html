@@ -1,0 +1,69 @@
+{{/*
+  Render fields array as a table with type linking.
+
+  Parameters:
+  - fields: Array of field objects with name, type, description
+  - enums: Map of enum definitions (for type linking)
+  - types: Map of type definitions (for type linking)
+*/}}
+{{- $fields := .fields -}}
+{{- $enums := .enums | default dict -}}
+{{- $types := .types | default dict -}}
+
+{{ if $fields }}
+<section id="fields">
+  <h2 class="text-xl font-semibold mb-4">Fields</h2>
+  <div class="overflow-x-auto">
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>Field</th>
+          <th>Type</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{- range $fields -}}
+        {{- $fieldType := .type -}}
+        {{- $typeDisplay := $fieldType -}}
+        {{- $typeLink := "" -}}
+        {{- $isOptional := strings.HasSuffix $fieldType "?" -}}
+        {{- $cleanType := $fieldType | strings.TrimSuffix "?" -}}
+
+        {{/* Parse enum<enumName> format */}}
+        {{- if strings.HasPrefix $cleanType "enum<" -}}
+          {{- $enumName := $cleanType | strings.TrimPrefix "enum<" | strings.TrimSuffix ">" -}}
+          {{- if index $enums $enumName -}}
+            {{- $typeDisplay = $enumName | title -}}
+            {{- if $isOptional -}}
+              {{- $typeDisplay = printf "%s?" ($enumName | title) -}}
+            {{- end -}}
+            {{- $typeLink = "#enums" -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{/* Check if type references a custom type array like Link[] */}}
+        {{- if and (not $typeLink) (strings.HasSuffix $cleanType "[]") -}}
+          {{- $innerType := $cleanType | strings.TrimSuffix "[]" -}}
+          {{- if index $types $innerType -}}
+            {{- $typeLink = "#types" -}}
+          {{- end -}}
+        {{- end -}}
+
+        <tr>
+          <td><code class="text-sm font-medium">{{ .name }}</code></td>
+          <td>
+            {{- if $typeLink -}}
+            <a href="{{ $typeLink }}" class="link link-primary"><code class="text-xs px-1.5 py-0.5 bg-base-300 rounded">{{ $typeDisplay }}</code></a>
+            {{- else -}}
+            <code class="text-xs px-1.5 py-0.5 bg-base-300 rounded text-base-content/60">{{ $typeDisplay }}</code>
+            {{- end -}}
+          </td>
+          <td class="text-base-content/70">{{ .description }}</td>
+        </tr>
+        {{- end -}}
+      </tbody>
+    </table>
+  </div>
+</section>
+{{ end }}

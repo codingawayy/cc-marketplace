@@ -1,0 +1,29 @@
+{{ define "main" }}
+<article>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "spec_type" "task"
+  ) }}
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {{ with .Params.spec_data.schedule }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Schedule</dt>
+      <dd class="font-mono text-sm">{{ . }}</dd>
+    </div>
+    {{ end }}
+
+    {{ with .Params.spec_data.retryPolicy }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Retry Policy</dt>
+      <dd class="font-mono text-sm">{{ . }}</dd>
+    </div>
+    {{ end }}
+  </div>
+
+  {{ with .Content }}
+  <div class="prose mt-8">{{ . }}</div>
+  {{ end }}
+</article>
+{{ end }}

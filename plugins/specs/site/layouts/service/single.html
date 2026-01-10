@@ -1,0 +1,54 @@
+{{ define "main" }}
+<article>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "spec_type" "service"
+    "badges" (slice .Params.spec_data.provider .Params.spec_data.authentication)
+  ) }}
+
+  <div class="space-y-4">
+    {{ with .Params.spec_data.documentation }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Documentation</dt>
+      <dd><a href="{{ . }}" class="link link-primary" target="_blank" rel="noopener">{{ . }}</a></dd>
+    </div>
+    {{ end }}
+
+    {{ with .Params.spec_data.usage }}
+    <div class="bg-base-200 rounded-lg p-4">
+      <dt class="text-xs font-semibold uppercase tracking-wide text-base-content/60 mb-1">Usage</dt>
+      <dd class="text-sm">{{ . }}</dd>
+    </div>
+    {{ end }}
+
+    {{ with .Params.spec_data.rateLimits }}
+    <section id="rate-limits" class="mt-6">
+      <h2 class="text-xl font-semibold mb-4">Rate Limits</h2>
+      <div class="overflow-x-auto">
+        <table class="spec-table">
+          <thead>
+            <tr>
+              <th>Limit</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range . }}
+            <tr>
+              <td>{{ .limit }}</td>
+              <td class="font-mono">{{ .value }}</td>
+            </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    {{ end }}
+  </div>
+
+  {{ with .Content }}
+  <div class="prose mt-8">{{ . }}</div>
+  {{ end }}
+</article>
+{{ end }}

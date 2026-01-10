@@ -1,0 +1,29 @@
+{{ define "main" }}
+<article>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "spec_type" "system"
+  ) }}
+
+  <div class="space-y-8">
+    {{ with .Params.spec_data.users }}
+    <section id="users">
+      <h2 class="text-xl font-semibold mb-4">Users</h2>
+      {{ partial "roles-list.html" . }}
+    </section>
+    {{ end }}
+
+    {{ with .Params.spec_data.storage }}
+    <section id="storage">
+      <h2 class="text-xl font-semibold mb-4">Storage</h2>
+      {{ partial "roles-list.html" . }}
+    </section>
+    {{ end }}
+  </div>
+
+  {{ with .Content }}
+  <div class="prose mt-8">{{ . }}</div>
+  {{ end }}
+</article>
+{{ end }}

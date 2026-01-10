@@ -1,13 +1,11 @@
 {{ define "main" }}
 <article>
-  <header class="mb-8">
-    <div class="flex items-center gap-2 mb-2 flex-wrap">
-      {{ with .Params.spec_type }}<span class="badge badge-primary badge-sm">{{ . }}</span>{{ end }}
-      {{ with .Params.spec_data.storage }}<span class="badge badge-outline badge-sm">{{ . }}</span>{{ end }}
-    </div>
-    <h1 class="text-3xl font-bold">{{ .Title }}</h1>
-    {{ with .Description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
-  </header>
+  {{ partial "spec-header.html" (dict
+    "title" .Title
+    "description" .Description
+    "spec_type" .Params.spec_type
+    "badges" (slice .Params.spec_data.storage)
+  ) }}
 
   <div class="space-y-4">
     {{ with .Params.spec_data }}
@@ -25,9 +23,7 @@
   </div>
 
   {{ with .Content }}
-  <div class="prose mt-8">
-    {{ . }}
-  </div>
+  <div class="prose mt-8">{{ . }}</div>
   {{ end }}
 </article>
 {{ end }}

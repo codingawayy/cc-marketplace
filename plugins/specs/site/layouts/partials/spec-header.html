@@ -1,0 +1,19 @@
+{{/*
+  Reusable header for spec pages.
+
+  Parameters:
+  - title: Page title (required)
+  - description: Page description (optional)
+  - spec_type: Type badge text (optional)
+  - badges: Slice of additional badge strings (optional)
+*/}}
+<header class="mb-8">
+  <div class="flex items-center gap-2 mb-2 flex-wrap">
+    {{ with .spec_type }}<span class="badge badge-primary badge-sm">{{ . }}</span>{{ end }}
+    {{ range .badges }}
+      {{ if . }}<span class="badge badge-outline badge-sm">{{ . }}</span>{{ end }}
+    {{ end }}
+  </div>
+  <h1 class="text-3xl font-bold">{{ .title }}</h1>
+  {{ with .description }}<p class="text-base-content/70 mt-2">{{ . }}</p>{{ end }}
+</header>

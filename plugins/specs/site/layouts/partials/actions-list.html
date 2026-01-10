@@ -1,0 +1,18 @@
+{{/*
+  Render actions list for entity pages.
+
+  Input: Actions section page object
+*/}}
+{{ if .Pages }}
+<section class="mt-12">
+  <h2 class="text-xl font-semibold mb-4">Actions</h2>
+  <ul class="list-disc list-inside space-y-2">
+    {{ range .Pages }}
+    <li>
+      <a href="{{ .RelPermalink }}" class="link link-primary">{{ .Title }}</a>
+      {{ with .Params.description }}<span class="text-base-content/70"> - {{ . }}</span>{{ end }}
+    </li>
+    {{ end }}
+  </ul>
+</section>
+{{ end }}

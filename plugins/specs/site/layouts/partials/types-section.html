@@ -1,0 +1,36 @@
+{{/*
+  Render custom types map as sections with tables.
+
+  Input: Map of type definitions
+  Key = type name, Value = array of {name, type, description}
+*/}}
+{{ if . }}
+<section id="types">
+  <h2 class="text-xl font-semibold mb-4">Types</h2>
+  {{ range $typeName, $fields := . }}
+  <div class="mb-6">
+    <h3 class="text-lg font-medium mb-2">{{ $typeName }}</h3>
+    <div class="overflow-x-auto">
+      <table class="spec-table">
+        <thead>
+          <tr>
+            <th>Field</th>
+            <th>Type</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range $fields }}
+          <tr>
+            <td><code class="text-sm font-medium">{{ .name }}</code></td>
+            <td><code class="text-xs px-1.5 py-0.5 bg-base-300 rounded text-base-content/60">{{ .type }}</code></td>
+            <td class="text-base-content/70">{{ .description }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {{ end }}
+</section>
+{{ end }}

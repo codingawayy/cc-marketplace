@@ -3,11 +3,15 @@ title: Action
 description: Action specification defining operations that can be performed on an entity
 type: object
 required:
+  - type
   - name
   - entity
   - description
   - authorization
 properties:
+  type:
+    const: action
+    description: Spec type for Hugo template selection
   name:
     type: string
     description: Action name
