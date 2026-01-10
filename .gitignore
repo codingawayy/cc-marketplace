@@ -13,5 +13,6 @@ Thumbs.db
 *.local.json
 .env.local
 
-# Claude Code local settings
-.claude/
+# Local settings and cache
+*.local.json
+.playwright-mcp

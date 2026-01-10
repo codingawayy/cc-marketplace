@@ -105,6 +105,17 @@ $specCount = (Get-ChildItem -Path $ProjectSpecsDir -Filter "*.yaml" -Recurse).Co
 Write-Host "Found $specCount spec files in: $ProjectSpecsDir" -ForegroundColor Green
 Write-Host ""
 
+# Clean up previous build artifacts to ensure fresh state
+$resourcesDir = Join-Path $PluginSiteDir "resources"
+$publicDir = Join-Path $PluginSiteDir "public"
+if (Test-Path $resourcesDir) {
+    Write-Host "Clearing Hugo cache..." -ForegroundColor Yellow
+    Remove-Item $resourcesDir -Recurse -Force
+}
+if (Test-Path $publicDir) {
+    Remove-Item $publicDir -Recurse -Force
+}
+
 # Generate temporary mount config
 # This mounts the project's specs directory into Hugo's assets/specs/
 $mountConfigPath = Join-Path $PluginSiteDir "mount.toml"

@@ -33,28 +33,19 @@
           {{/* Domain section - entity + actions rendering */}}
           {{ if eq .Title "Domain" }}
           <div class="spec-nav-domain-list">
-            {{ range .Sections }}
-              {{ $entitySection := . }}
-              {{ $entityPage := false }}
-              {{ range .RegularPages }}
-                {{ $entityPage = . }}
-              {{ end }}
-              {{ $actionsSection := false }}
-              {{ range .Sections }}
-                {{ if strings.HasSuffix .Title "Actions" }}
-                  {{ $actionsSection = . }}
-                {{ end }}
-              {{ end }}
-              <div class="spec-nav-domain-item" data-name="{{ $entitySection.Title | lower }}">
-                {{ with $entityPage }}
-                <a href="{{ .RelPermalink }}" class="spec-nav-link {{ if eq $.RelPermalink .RelPermalink }}is-active{{ end }}">
-                  {{ $entitySection.Title }}
+            {{/* Entity pages are now directly under /domain/ */}}
+            {{ range .RegularPages }}
+              {{ $entityPage := . }}
+              {{/* Check for actions section at entity-path/actions/ */}}
+              {{ $actionsPath := printf "%sactions" .RelPermalink }}
+              {{ $actionsSection := $.Site.GetPage $actionsPath }}
+              <div class="spec-nav-domain-item" data-name="{{ $entityPage.Title | lower }}">
+                <a href="{{ $entityPage.RelPermalink }}" class="spec-nav-link {{ if eq $.RelPermalink $entityPage.RelPermalink }}is-active{{ end }}">
+                  {{ $entityPage.Title }}
                 </a>
-                {{ else }}
-                <span class="spec-nav-label">{{ $entitySection.Title }}</span>
-                {{ end }}
                 {{ with $actionsSection }}
-                <a href="{{ .RelPermalink }}" class="spec-nav-action-icon {{ if $.IsDescendant . }}is-active{{ end }}" title="Actions">
+                {{ $isActionsActive := or (hasPrefix $.RelPermalink .RelPermalink) (eq $.RelPermalink .RelPermalink) }}
+                <a href="{{ .RelPermalink }}" class="spec-nav-action-icon {{ if $isActionsActive }}is-active{{ end }}" title="Actions">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z" />
                   </svg>
@@ -64,36 +55,26 @@
             {{ end }}
           </div>
 
-          {{/* Other sections - nested list rendering */}}
-          {{ else }}
+          {{/* Apps section - folder-level pages like Domain */}}
+          {{ else if eq .Title "Applications" }}
           <div class="spec-nav-list">
-            {{ range .Pages }}
+            {{ range .RegularPages }}
             <div class="spec-nav-item" data-name="{{ .Title | lower }}">
-              {{ if .Pages }}
-              {{/* Has sub-pages - collapsible subsection */}}
-              <div class="spec-nav-subsection">
-                <button class="spec-nav-subsection-header {{ if eq $.RelPermalink .RelPermalink }}is-active{{ end }}" aria-expanded="true" data-toggle-subsection>
-                  <span>{{ .Title }}</span>
-                  <svg class="spec-nav-chevron-sm" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <div class="spec-nav-subsection-content">
-                  {{ range .Pages }}
-                  <div class="spec-nav-subitem" data-name="{{ .Title | lower }}">
-                    <a href="{{ .RelPermalink }}" class="spec-nav-link {{ if eq $.RelPermalink .RelPermalink }}is-active{{ end }}">
-                      {{ .Title }}
-                    </a>
-                  </div>
-                  {{ end }}
-                </div>
-              </div>
-              {{ else }}
-              {{/* No sub-pages - direct link */}}
               <a href="{{ .RelPermalink }}" class="spec-nav-link {{ if eq $.RelPermalink .RelPermalink }}is-active{{ end }}">
                 {{ .Title }}
               </a>
-              {{ end }}
+            </div>
+            {{ end }}
+          </div>
+
+          {{/* Other sections - simple list rendering */}}
+          {{ else }}
+          <div class="spec-nav-list">
+            {{ range .RegularPages }}
+            <div class="spec-nav-item" data-name="{{ .Title | lower }}">
+              <a href="{{ .RelPermalink }}" class="spec-nav-link {{ if eq $.RelPermalink .RelPermalink }}is-active{{ end }}">
+                {{ .Title }}
+              </a>
             </div>
             {{ end }}
           </div>

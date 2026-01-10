@@ -1,9 +1,32 @@
 <div class="breadcrumbs text-sm mb-6">
   <ul>
     <li><a href="{{ "/" | relURL }}">Home</a></li>
-    {{- range .Ancestors.Reverse }}
-    <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+    {{- $isActionPage := eq .Params.spec_type "action" }}
+    {{- $isActionsSection := and (strings.HasSuffix .RelPermalink "/actions/") (not $isActionPage) }}
+    {{- if or $isActionPage $isActionsSection }}
+      {{/* Custom breadcrumb for action pages: Domain > Entity > Actions [> Action Name] */}}
+      {{ $domainSection := .Site.GetPage "/domain" }}
+      {{ with $domainSection }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+      {{/* Get entity page */}}
+      {{ $entityPath := .RelPermalink | replaceRE `/actions/.*$` "/" }}
+      {{ $entityPage := .Site.GetPage $entityPath }}
+      {{ with $entityPage }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{ end }}
+      {{- if $isActionPage }}
+      {{ $actionsPath := .RelPermalink | replaceRE `/[^/]+/$` "/" }}
+      <li><a href="{{ $actionsPath }}">Actions</a></li>
+      <li>{{ .Title }}</li>
+      {{- else }}
+      <li>Actions</li>
+      {{- end }}
+    {{- else }}
+      {{- range .Ancestors.Reverse }}
+      <li><a href="{{ .RelPermalink }}">{{ .Title }}</a></li>
+      {{- end }}
+      <li>{{ .Title }}</li>
     {{- end }}
-    <li>{{ .Title }}</li>
   </ul>
 </div>

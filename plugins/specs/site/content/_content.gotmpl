@@ -16,12 +16,14 @@
   "apps" (dict "title" "Applications" "description" "Application modules")
 }}
 
-{{/* Track which sections and entity folders exist */}}
+{{/* Track which sections, entity folders, and entities with actions exist */}}
 {{ $existingSections := dict }}
 {{ $entityFolders := dict }}
+{{ $entitiesWithActions := dict }}
 
-{{/* Process all YAML spec files */}}
-{{ range resources.Match "specs/**/*.yaml" }}
+{{/* Process all YAML spec files (both root-level and nested) */}}
+{{ $allSpecs := resources.Match "specs/*.yaml" | append (resources.Match "specs/**/*.yaml") }}
+{{ range $allSpecs }}
   {{ $data := . | transform.Unmarshal }}
   {{/* Normalize path: handle leading slash and Windows separators */}}
   {{ $normalizedName := .Name | replaceRE `\\` "/" }}
@@ -35,19 +37,33 @@
     {{ $existingSections = merge $existingSections (dict $section true) }}
 
     {{/* Track entity folders (domain/entity-name/) */}}
-    {{ if and (eq $section "domain") (gt (len $parts) 2) }}
+    {{ if and (eq $section "domain") (gt (len $parts) 1) }}
       {{ $entityName := index $parts 1 }}
       {{ $entityFolders = merge $entityFolders (dict $entityName true) }}
+      {{/* Track entities that have action files */}}
+      {{ if and (gt (len $parts) 2) (eq (index $parts 2) "actions") }}
+        {{ $entitiesWithActions = merge $entitiesWithActions (dict $entityName true) }}
+      {{ end }}
     {{ end }}
   {{ end }}
 
   {{/* Determine spec type from path */}}
   {{ $specType := "spec" }}
+  {{ $isFolderLevelFile := false }}
   {{ if hasPrefix $path "domain/" }}
     {{ if strings.Contains $path "/actions/" }}
       {{ $specType = "action" }}
     {{ else }}
       {{ $specType = "entity" }}
+      {{/* Check if this is an entity file (domain/X/X.yaml pattern) */}}
+      {{ $pathParts := split $path "/" }}
+      {{ if eq (len $pathParts) 3 }}
+        {{ $folderName := index $pathParts 1 }}
+        {{ $fileName := index $pathParts 2 }}
+        {{ if eq $folderName $fileName }}
+          {{ $isFolderLevelFile = true }}
+        {{ end }}
+      {{ end }}
     {{ end }}
   {{ else if hasPrefix $path "tasks/" }}
     {{ $specType = "task" }}
@@ -55,6 +71,15 @@
     {{ $specType = "service" }}
   {{ else if hasPrefix $path "apps/" }}
     {{ $specType = "app" }}
+    {{/* Check if this is an app file (apps/X/X.yaml pattern) */}}
+    {{ $pathParts := split $path "/" }}
+    {{ if eq (len $pathParts) 3 }}
+      {{ $folderName := index $pathParts 1 }}
+      {{ $fileName := index $pathParts 2 }}
+      {{ if eq $folderName $fileName }}
+        {{ $isFolderLevelFile = true }}
+      {{ end }}
+    {{ end }}
   {{ else if eq $path "system" }}
     {{ $specType = "system" }}
   {{ end }}
@@ -70,9 +95,15 @@
   {{/* Get description */}}
   {{ $description := $data.description | default "" }}
 
+  {{/* For folder-level files, place at folder level (e.g., domain/X/ instead of domain/X/X/) */}}
+  {{ $pagePath := $path }}
+  {{ if $isFolderLevelFile }}
+    {{ $pagePath = $path | path.Dir }}
+  {{ end }}
+
   {{/* Create the page */}}
   {{ $page := dict
-    "path" $path
+    "path" $pagePath
     "title" $title
     "kind" "page"
     "params" (dict
@@ -97,17 +128,8 @@
   {{ end }}
 {{ end }}
 
-{{/* Generate entity folder index pages (domain/entity-name/) */}}
-{{ range $entityName, $_ := $entityFolders }}
-  {{ $page := dict
-    "path" (printf "domain/%s" $entityName)
-    "title" ($entityName | humanize | title)
-    "kind" "section"
-    "params" (dict "description" (printf "%s entity and related actions" $entityName))
-  }}
-  {{ $.AddPage $page }}
-
-  {{/* Also create actions subfolder index */}}
+{{/* Generate actions section pages for entities that have actions */}}
+{{ range $entityName, $_ := $entitiesWithActions }}
   {{ $actionsPage := dict
     "path" (printf "domain/%s/actions" $entityName)
     "title" (printf "%s Actions" ($entityName | humanize | title))
@@ -116,3 +138,4 @@
   }}
   {{ $.AddPage $actionsPage }}
 {{ end }}
+
