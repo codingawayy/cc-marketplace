@@ -20,7 +20,7 @@ Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `
 Run the stats script to determine the current state:
 
 ```bash
-pwsh -File "[pluginPath]/scripts/overview-stats.ps1"
+pwsh -File "[pluginPath]/scripts/get-changes.ps1" -For overview
 ```
 
 The script returns a JSON object with a `type` field. Based on `type`:

@@ -16,6 +16,10 @@
     "overviewCommit": {
       "type": "string",
       "description": "Git commit hash for which the system overview was generated"
+    },
+    "specsCommit": {
+      "type": "string",
+      "description": "Git commit hash for which the spec files were generated"
     }
   },
   "additionalProperties": false

@@ -274,6 +274,7 @@ The plugin uses `.specs/config.json` to configure exclusion patterns. This file 
 | ---------------- | ---------- | ----------------------------------------------------- |
 | `exclude`        | `string[]` | Glob patterns for paths to exclude from analysis      |
 | `overviewCommit` | `string`   | Git commit hash for which the overview was generated  |
+| `specsCommit`    | `string`   | Git commit hash for which the specs were generated    |
 
 **Default exclusions:** `docs.specs/`, `.specs/`, `.claude/`, `.git/`, `.github/`, `.rider/`, `.idea/`, `.vscode/`, `node_modules/`, `dist/`, `build/`, `.svelte-kit/`
 
