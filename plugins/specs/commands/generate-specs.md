@@ -96,7 +96,7 @@ docs.specs/
 Run the validation script to check the generated specs against schemas:
 
 ```bash
-pwsh -File "[pluginPath]/scripts/validate.ps1"
+node "[pluginPath]/validator/validate.js"
 ```
 
 If validation errors are found, fix them before proceeding.
