@@ -12,6 +12,10 @@
         "type": "string"
       },
       "default": []
+    },
+    "overviewCommit": {
+      "type": "string",
+      "description": "Git commit hash for which the system overview was generated"
     }
   },
   "additionalProperties": false

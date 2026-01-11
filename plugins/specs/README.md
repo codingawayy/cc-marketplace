@@ -23,13 +23,25 @@ All schema files are located in the `schemas/` folder and use YAML format for re
 
 ## Commands
 
-### `/specs:generate`
+### `/specs:generate-overview`
 
-Analyzes your codebase and generates YAML specification files to `docs.specs/`.
+Analyzes your codebase and generates `.specs/overview.md` - a semantic map of the system architecture.
 
 ```
-/specs:generate
+/specs:generate-overview
 ```
+
+Run this first to create the overview, then use `/specs:generate-specs` to generate the spec files.
+
+### `/specs:generate-specs`
+
+Generates YAML specification files to `docs.specs/` using the system overview as a guide.
+
+```
+/specs:generate-specs
+```
+
+Requires `.specs/overview.md` to exist. Run `/specs:generate-overview` first.
 
 ### `/specs:serve`
 
@@ -258,9 +270,10 @@ The plugin uses `.specs/config.json` to configure exclusion patterns. This file 
 }
 ```
 
-| Property  | Type       | Description                                      |
-| --------- | ---------- | ------------------------------------------------ |
-| `exclude` | `string[]` | Glob patterns for paths to exclude from analysis |
+| Property         | Type       | Description                                           |
+| ---------------- | ---------- | ----------------------------------------------------- |
+| `exclude`        | `string[]` | Glob patterns for paths to exclude from analysis      |
+| `overviewCommit` | `string`   | Git commit hash for which the overview was generated  |
 
 **Default exclusions:** `docs.specs/`, `.specs/`, `.claude/`, `.git/`, `.github/`, `.rider/`, `.idea/`, `.vscode/`, `node_modules/`, `dist/`, `build/`, `.svelte-kit/`
 
