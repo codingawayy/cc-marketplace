@@ -4,7 +4,11 @@
  * Validates YAML spec files against JSON schemas.
  *
  * Usage:
- *   node validate.js --specs <specsDir> --schemas <schemasDir>
+ *   node validate.js [--specs <specsDir>] [--schemas <schemasDir>]
+ *
+ * Defaults:
+ *   --specs    docs.specs (relative to cwd)
+ *   --schemas  ../schemas (relative to this script)
  *
  * Output:
  *   JSON object with validation results
@@ -19,7 +23,9 @@ const addFormats = require("ajv-formats");
 // Parse command line arguments
 function parseArgs() {
   const args = process.argv.slice(2);
-  const result = { specs: "docs.specs", schemas: null };
+  // Default schemas to ../schemas relative to this script
+  const defaultSchemas = path.join(__dirname, "..", "schemas");
+  const result = { specs: "docs.specs", schemas: defaultSchemas };
 
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--specs" && args[i + 1]) {
@@ -27,11 +33,6 @@ function parseArgs() {
     } else if (args[i] === "--schemas" && args[i + 1]) {
       result.schemas = args[++i];
     }
-  }
-
-  if (!result.schemas) {
-    console.error("Error: --schemas argument is required");
-    process.exit(1);
   }
 
   return result;
