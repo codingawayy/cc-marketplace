@@ -9,9 +9,7 @@ Validate YAML spec files in `docs.specs/` against their JSON schemas.
 
 ## Step 0: Get Plugin Path
 
-1. Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `cc-specs-plugin` entry.
-
-2. If the file or entry is missing, tell the user: "Plugin not initialized. Please restart Claude Code to trigger plugin initialization."
+Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `cc-specs-plugin` entry.
 
 ## Step 1: Check Dependencies
 

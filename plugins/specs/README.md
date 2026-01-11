@@ -1,6 +1,25 @@
 # Specs Plugin
 
-A Claude Code plugin for generating and browsing system specification documents.
+This plugin contains JSON Schema definitions for generating system specification documents. Following Domain-Driven Design (DDD) principles, these schemas define how to describe a software system in a way that is:
+
+- **Tech-agnostic** - Can be implemented in any language or framework
+- **Business-focused** - Reflects the domain language and concepts
+- **AI-friendly** - Structured for AI to understand and generate code from
+
+A **system** represents a complete software project (typically a repository) which may contain multiple **apps** (e.g., web, cli, mobile) that work together. The specification captures everything needed to understand the system: its domain model, business logic, integrations, and applications.
+
+The following schemas are available to document a system:
+
+| Component   | Schema                | Description                                                      |
+| ----------- | --------------------- | ---------------------------------------------------------------- |
+| **System**  | `system.schema.yaml`  | Top-level definition with global roles and storage mechanisms    |
+| **App**     | `app.schema.yaml`     | Application module within the system                             |
+| **Entity**  | `entity.schema.yaml`  | Domain object with fields, types, enums, and context-based roles |
+| **Action**  | `action.schema.yaml`  | Operation on an entity with authorization rules                  |
+| **Task**    | `task.schema.yaml`    | Scheduled or background job with schedule and retry policy       |
+| **Service** | `service.schema.yaml` | External third-party API or service                              |
+
+All schema files are located in the `schemas/` folder and use YAML format for readability.
 
 ## Commands
 
@@ -31,29 +50,6 @@ Validates all specification files in `docs.specs/` against their JSON schemas.
 ```
 
 Reports validation errors with file paths and specific issues. Useful for catching schema violations before serving or sharing specs.
-
-## Overview
-
-This plugin contains JSON Schema definitions for generating system specification documents. Following Domain-Driven Design (DDD) principles, these schemas define how to describe a software system in a way that is:
-
-- **Tech-agnostic** - Can be implemented in any language or framework
-- **Business-focused** - Reflects the domain language and concepts
-- **AI-friendly** - Structured for AI to understand and generate code from
-
-A **system** represents a complete software project (typically a repository) which may contain multiple **apps** (e.g., web, cli, mobile) that work together. The specification captures everything needed to understand the system: its domain model, business logic, integrations, and applications.
-
-The following schemas are available to document a system:
-
-| Component   | Schema                | Description                                                              |
-| ----------- | --------------------- | ------------------------------------------------------------------------ |
-| **System**  | `system.schema.yaml`  | Top-level definition with global roles and storage mechanisms            |
-| **App**     | `app.schema.yaml`     | Application module within the system                                     |
-| **Entity**  | `entity.schema.yaml`  | Domain object with fields, types, enums, and context-based roles         |
-| **Action**  | `action.schema.yaml`  | Operation on an entity with authorization rules                          |
-| **Task**    | `task.schema.yaml`    | Scheduled or background job with schedule and retry policy               |
-| **Service** | `service.schema.yaml` | External third-party API or service                                      |
-
-All schema files are located in the `schemas/` folder and use YAML format for readability.
 
 ## Examples
 
@@ -244,3 +240,28 @@ docs.specs/
     └── [app]/
         └── [app].yaml
 ```
+
+## Configuration
+
+### `.specs/config.json`
+
+The plugin uses `.specs/config.json` to configure exclusion patterns. This file is created automatically when you first run `/specs:generate`.
+
+```json
+{
+  "exclude": [
+    "docs.specs/",
+    ".claude/",
+    ".git/",
+    "node_modules/"
+  ]
+}
+```
+
+| Property  | Type       | Description                                      |
+| --------- | ---------- | ------------------------------------------------ |
+| `exclude` | `string[]` | Glob patterns for paths to exclude from analysis |
+
+**Default exclusions:** `docs.specs/`, `.specs/`, `.claude/`, `.git/`, `.github/`, `.rider/`, `.idea/`, `.vscode/`, `node_modules/`, `dist/`, `build/`, `.svelte-kit/`
+
+**Gitignore:** Patterns from `.gitignore` are always applied automatically in addition to the config file.

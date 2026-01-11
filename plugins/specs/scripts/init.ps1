@@ -3,23 +3,10 @@
     Initializes the specs plugin for the current user.
 
 .DESCRIPTION
-    Adds the plugin path to ~/.claude/plugins/cache/settings.json.
+    - Adds the plugin path to ~/.claude/plugins/cache/settings.json
+    - Creates .specs/config.json in the current project if it doesn't exist
+
     This script is called automatically via the SessionStart hook.
-
-    This is a temporary workaround for claude-code#9354, where ${CLAUDE_PLUGIN_ROOT}
-    doesn't expand in command markdown files. Once the bug is fixed, this file will
-    no longer be needed.
-
-    https://github.com/anthropics/claude-code/issues/9354
-
-.NOTES
-    The ~/.claude/plugins/cache/settings.json file structure:
-
-    {
-      "cc-specs-plugin": {
-        "pluginPath": "/path/to/cc-specs-plugin"
-      }
-    }
 #>
 
 $ErrorActionPreference = "SilentlyContinue"
@@ -34,28 +21,64 @@ if (-not $UserHome -and $env:USERPROFILE) {
     $UserHome = $env:USERPROFILE
 }
 
-# Build settings directory path: ~/.claude/plugins/cache/
+# ============================================================================
+# 1. Cache plugin path in ~/.claude/plugins/cache/settings.json
+#
+#    This is a temporary workaround for claude-code#9354, where
+#    ${CLAUDE_PLUGIN_ROOT} doesn't expand in command markdown files.
+#    https://github.com/anthropics/claude-code/issues/9354
+# ============================================================================
+
 $SettingsDir = Join-Path $UserHome ".claude" |
-               Join-Path -ChildPath "plugins" |
-               Join-Path -ChildPath "cache"
+Join-Path -ChildPath "plugins" |
+Join-Path -ChildPath "cache"
 $SettingsPath = Join-Path $SettingsDir "settings.json"
 
-# Ensure settings directory exists
 if (-not (Test-Path $SettingsDir)) {
     New-Item -ItemType Directory -Path $SettingsDir -Force | Out-Null
 }
 
-# Load existing settings.json or create new object
 if (Test-Path $SettingsPath) {
     $settings = Get-Content -Path $SettingsPath -Raw | ConvertFrom-Json
-} else {
+}
+else {
     $settings = @{}
 }
 
-# Add/update cc-specs-plugin entry
 $settings | Add-Member -NotePropertyName "cc-specs-plugin" -NotePropertyValue @{
     pluginPath = $PluginRoot
 } -Force
 
-# Write back to file
 $settings | ConvertTo-Json -Depth 10 | Set-Content -Path $SettingsPath -Encoding UTF8
+
+# ============================================================================
+# 2. Create .specs/config.json in current project if it doesn't exist
+# ============================================================================
+
+$SpecsDir = Join-Path (Get-Location) ".specs"
+$ConfigPath = Join-Path $SpecsDir "config.json"
+
+if (-not (Test-Path $ConfigPath)) {
+    if (-not (Test-Path $SpecsDir)) {
+        New-Item -ItemType Directory -Path $SpecsDir -Force | Out-Null
+    }
+
+    $DefaultConfig = @{
+        exclude = @(
+            "docs.specs/"
+            ".specs/"
+            ".claude/"
+            ".git/"
+            ".github/"
+            ".rider/"
+            ".idea/"
+            ".vscode/"
+            "node_modules/"
+            "dist/"
+            "build/"
+            ".svelte-kit/"
+        )
+    }
+
+    $DefaultConfig | ConvertTo-Json -Depth 10 | Set-Content -Path $ConfigPath -Encoding UTF8
+}

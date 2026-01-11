@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/codingawayy/cc-marketplace/main/plugins/specs/settings/config.schema.json",
+  "title": "Specs Plugin Configuration",
+  "description": "Configuration file for the specs plugin",
+  "type": "object",
+  "properties": {
+    "exclude": {
+      "type": "array",
+      "description": "Glob patterns for paths to exclude from spec generation",
+      "items": {
+        "type": "string"
+      },
+      "default": []
+    }
+  },
+  "additionalProperties": false
+}

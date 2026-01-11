@@ -7,31 +7,44 @@ allowed-tools: Read, Write, Glob, Grep, TodoWrite, Bash
 
 Generate system specification YAML files by analyzing the codebase.
 
-## Step 0: Get Plugin Path
+## Setup
 
-1. Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `cc-specs-plugin` entry.
+### Step 0: Get Plugin Path
 
-2. If the file or entry is missing, tell the user: "Plugin not initialized. Please restart Claude Code to trigger plugin initialization."
+Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `cc-specs-plugin` entry.
 
-## Step 1: Read Schemas and Documentation
+## Discovery Phase
 
-Read the plugin folder (from `pluginPath`) to understand:
+### Step 1: Build File Index
+
+Run the build-index script to create the file index:
+
+```bash
+pwsh -File "[pluginPath]/scripts/build-index.ps1"
+```
+
+This creates `.specs/index.csv` containing all repository files (excluding patterns from `.specs/config.json` and `.gitignore`).
+
+### Step 2: Analyze Codebase
+
+Read `.specs/index.csv` to get the list of files to analyze. Use TodoWrite to track discovered items by category.
+
+For each file in the index, analyze the code to discover:
+- Entities (domain objects)
+- Actions (operations on entities)
+- Tasks (scheduled/background jobs)
+- Services (external API integrations)
+- Apps (application modules)
+
+## Generation Phase
+
+### Step 3: Read Schemas and Documentation
+
+Read the plugin folder (from `pluginPath`), specifically these files:
 - `README.md` - Documentation, examples, and conventions
-- `schemas/` - Schema definitions for each spec type
+- `schemas/*` - Schema definitions for each spec type
 
-## Step 2: Discovery Phase
-
-Explore the codebase to discover what exists. Use TodoWrite to track discovered items by category.
-
-### Exclusions
-
-DO NOT analyze:
-- `docs.specs/`
-- `.claude/`, `.git/`, `.github/`, `.rider/`, `.idea/`, `.vscode/`
-- `node_modules/`, `dist/`, `build/`, `.svelte-kit/`
-- Paths matching patterns in `.gitignore`
-
-## Step 3: Generate Documentation
+### Step 4: Generate Spec Files
 
 For each discovered item, generate a YAML spec file following the schemas. Write all output to `docs.specs/` with `.yaml` extension.
 
@@ -57,6 +70,12 @@ docs.specs/
         └── [app].yaml
 ```
 
-## Step 4: Summary
+### Step 5: Summary
 
-Report items documented by category and any items needing manual review.
+Run the summarize script to get statistics:
+
+```bash
+pwsh -File "[pluginPath]/scripts/summarize.ps1"
+```
+
+Report the results to the user.

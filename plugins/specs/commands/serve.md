@@ -11,14 +11,12 @@ Start a local Hugo server to browse the generated specifications as a website.
 
 1. Read `~/.claude/plugins/cache/settings.json` and get the `pluginPath` from the `cc-specs-plugin` entry.
 
-2. If the file or entry is missing, tell the user: "Plugin not initialized. Please restart Claude Code to trigger plugin initialization."
-
-3. Run the serve script using PowerShell with the full path:
+2. Run the serve script using PowerShell with the full path:
    ```
    powershell.exe -NoProfile -File "<pluginPath>/scripts/serve.ps1"
    ```
 
-4. Run the command in the background so the user can continue working while the server runs.
+3. Run the command in the background so the user can continue working while the server runs.
 
 The script will:
 - Check if Hugo is installed (provide install instructions if not)

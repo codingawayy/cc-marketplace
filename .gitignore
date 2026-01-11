@@ -16,3 +16,7 @@ Thumbs.db
 # Local settings and cache
 *.local.json
 .playwright-mcp
+
+# Test files
+.specsrc.json
+.specs
