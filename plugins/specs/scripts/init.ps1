@@ -82,3 +82,15 @@ if (-not (Test-Path $ConfigPath)) {
 
     $DefaultConfig | ConvertTo-Json -Depth 10 | Set-Content -Path $ConfigPath -Encoding UTF8
 }
+
+# ============================================================================
+# 3. Create .specs/.gitignore if it doesn't exist
+# ============================================================================
+
+$GitignorePath = Join-Path $SpecsDir ".gitignore"
+
+if (-not (Test-Path $GitignorePath)) {
+    @"
+temp/
+"@ | Set-Content -Path $GitignorePath -Encoding UTF8 -NoNewline
+}
