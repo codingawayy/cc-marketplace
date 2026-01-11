@@ -42,7 +42,7 @@ Read the plugin folder (from `pluginPath`), specifically these files:
 
 ## Generation
 
-### Step 4: Create or Resume Plan
+### Step 4: Create Plan
 
 Check if a plan already exists in `.specs/temp/plans/`:
 - First run: `full-<commit>.md`
@@ -50,46 +50,20 @@ Check if a plan already exists in `.specs/temp/plans/`:
 
 **If plan exists:** Read it and continue from where it left off (some items may already be checked).
 
-**If plan does not exist:** Use the `plan-and-do` skill to create a new plan with:
-- **Objective**: Generate/update YAML spec files from codebase
-- **Approach**: List phases (e.g., System → Entities → Actions → Tasks → Services → Apps)
-- **Detailed Plan**: Checkbox items for each spec to generate, organized by phase
-- **Notes**: Any relevant context from the overview or changes file
-- **Changelog**: Initial entry
-
-For incremental updates, read `.specs/temp/<prev>-to-<curr>.json` to identify which specs need updating based on changed files.
+**If plan does not exist:** Read `[pluginPath]/templates/generate-specs-plan.md` and follow its instructions to create a new plan.
 
 ### Step 5: Generate Spec Files
 
-Execute the plan following the `plan-and-do` skill guidelines:
-1. Re-read the plan before starting
-2. For each item, read relevant source files and generate the YAML spec
-3. Mark items complete (`[x]`) immediately after generating each spec
-4. Update the plan if you discover additional specs needed or changes in scope
+Execute the plan following the `plan-and-do` skill guidelines.
 
-Write all output to `docs.specs/` with `.yaml` extension.
+**Critical: Update the plan after EACH item.** For each item in the plan:
 
-Rules:
-- Only include fields defined in the schema
-- Omit optional fields if not applicable
+1. **Check if the spec already exists** - Read the file path to see if it's already been generated
+2. **If it exists and is valid**, mark it complete with a note: `[x] Generate system.yaml (exists, valid)`
+3. **If it doesn't exist**, generate it, then mark complete: `[x] Generate system.yaml (created)`
+4. **If it exists but needs fixes**, update it, then mark complete: `[x] Generate system.yaml (updated)`
 
-Output structure:
-```
-docs.specs/
-├── system.yaml
-├── domain/
-│   └── [entity]/
-│       ├── [entity].yaml
-│       └── actions/
-│           └── [action].yaml
-├── tasks/
-│   └── [task].yaml
-├── external-services/
-│   └── [service].yaml
-└── apps/
-    └── [app]/
-        └── [app].yaml
-```
+Update the plan file after completing each item or small batch of related items - do not wait until the end. This ensures progress is tracked even if the session is interrupted.
 
 ### Step 6: Validate
 
