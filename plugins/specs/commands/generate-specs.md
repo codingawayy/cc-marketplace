@@ -7,7 +7,9 @@ allowed-tools: Read, Write, Glob, Grep, TodoWrite, Bash
 
 Generate YAML specification files using the system overview as a guide.
 
-**Prerequisite:** Run `/specs:generate-overview` first to create `.specs/overview.md`.
+**Prerequisites:**
+- Run `/specs:generate-overview` first to create `.specs/overview.md`
+- Run `/specs:index-artifacts` to create `.specs/artifacts.csv`
 
 ## Setup
 
@@ -30,9 +32,11 @@ The script returns a JSON object with a `type` field. Based on `type`:
 
 For incremental updates, the script saves the result to `.specs/temp/<prev>-to-<curr>.json`.
 
-### Step 2: Read Overview
+### Step 2: Read Overview and Artifacts
 
 Read `.specs/overview.md` to understand the system architecture.
+
+Read `.specs/artifacts.csv` to get the list of artifacts to generate specs for.
 
 ### Step 3: Read Schemas and Documentation
 
@@ -50,7 +54,7 @@ Check if a plan already exists in `.specs/temp/plans/`:
 
 **If plan exists:** Read it and continue from where it left off (some items may already be checked).
 
-**If plan does not exist:** Read `[pluginPath]/templates/generate-specs-plan.md` and follow its instructions to create a new plan.
+**If plan does not exist:** Read `[pluginPath]/templates/generate-specs-plan.md` and follow its instructions to create a new plan. Replace all `{{placeholder}}` values with actual paths and names.
 
 ### Step 5: Generate Spec Files
 
