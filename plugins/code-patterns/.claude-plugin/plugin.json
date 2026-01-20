@@ -1,0 +1,17 @@
+{
+  "name": "code-patterns",
+  "version": "1.0.0",
+  "description": "Code refactoring and manipulation skills",
+  "author": {
+    "name": "codingawayy",
+    "email": ""
+  },
+  "license": "MIT",
+  "keywords": [
+    "refactoring",
+    "code-patterns",
+    "manipulation",
+    "code-quality"
+  ],
+  "repository": "https://github.com/codingawayy/cc-marketplace"
+}

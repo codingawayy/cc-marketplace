@@ -4,10 +4,11 @@ This repository is a Claude Code **plugin marketplace**. These plugins are part 
 
 ## Available Plugins
 
-| Plugin                    | Description                                        | Scope           |
-| ------------------------- | -------------------------------------------------- | --------------- |
-| [git](./plugins/git/)     | Streamlined git workflows                          | User or Project |
-| [specs](./plugins/specs/) | Generate and browse system specification documents | Project only    |
+| Plugin                                    | Description                                        | Scope           |
+| ----------------------------------------- | -------------------------------------------------- | --------------- |
+| [git](./plugins/git/)                     | Streamlined git workflows                          | User or Project |
+| [specs](./plugins/specs/)                 | Generate and browse system specification documents | Project only    |
+| [code-patterns](./plugins/code-patterns/) | Code refactoring and manipulation skills           | User or Project |
 
 Plugins with hooks can only be installed at the project level for security reasons, as hooks run automatically without user invocation.
 
