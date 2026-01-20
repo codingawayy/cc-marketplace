@@ -25,6 +25,14 @@
       "source": "./plugins/git",
       "category": "development",
       "tags": ["git", "commit", "conventional-commits"]
+    },
+    {
+      "name": "code-patterns",
+      "description": "Code refactoring and manipulation skills",
+      "version": "1.0.0",
+      "source": "./plugins/code-patterns",
+      "category": "development",
+      "tags": ["refactoring", "code-patterns", "code-quality"]
     }
   ]
 }
