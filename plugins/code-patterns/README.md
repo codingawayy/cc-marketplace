@@ -1,13 +1,13 @@
 # Code Patterns Plugin
 
-A Claude Code plugin for code refactoring and manipulation skills.
+A Claude Code plugin for code refactoring and manipulation commands.
 
-## Skills
+## Commands
 
-| Skill                                                | Description                                                 |
-| ---------------------------------------------------- | ----------------------------------------------------------- |
-| [folder-structure](skills/folder-structure/SKILL.md) | Guidelines for organizing files and folders in the codebase |
-| [inline-single-use](skills/inline-single-use/SKILL.md) | Rule for when to inline code vs extract into separate files |
+| Command | Description |
+|---------|-------------|
+| `/code-patterns:folder-structure` | Guidelines for organizing files and folders in the codebase |
+| `/code-patterns:inline-single-use` | Rule for when to inline code vs extract into separate files |
 
 ## Overview
 

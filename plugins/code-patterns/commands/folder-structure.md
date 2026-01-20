@@ -1,7 +1,6 @@
 ---
-name: folder-structure
-description: Guidelines for organizing files and folders in the codebase. Apply when creating new files, folders, or restructuring existing code.
-user-invocable: true
+description: Guidelines for organizing files and folders in the codebase
+allowed-tools: []
 ---
 
 # Folder Structure
