@@ -1,6 +1,7 @@
 ---
 name: inline-single-use
 description: Rule for when to inline code vs extract into separate files. Apply when writing new code, refactoring, or deciding whether to create a new file or abstraction.
+user-invocable: true
 ---
 
 # Inlining
