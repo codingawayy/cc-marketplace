@@ -12,3 +12,4 @@ This repository contains the following plugins:
 
 - **[git](plugins/git/)** - Git workflows
 - **[specs](plugins/specs/)** - generate and view system specification documents
+- **[agent-loop](plugins/agent-loop/)** - run long-running autonomous tasks across multiple Claude Code sessions

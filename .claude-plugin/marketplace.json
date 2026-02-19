@@ -33,6 +33,14 @@
       "source": "./plugins/code-patterns",
       "category": "development",
       "tags": ["refactoring", "code-patterns", "code-quality"]
+    },
+    {
+      "name": "agent-loop",
+      "description": "Run long-running autonomous tasks across multiple Claude Code sessions",
+      "version": "1.0.0",
+      "source": "./plugins/agent-loop",
+      "category": "development",
+      "tags": ["agent-loop", "orchestrator", "autonomous", "background"]
     }
   ]
 }

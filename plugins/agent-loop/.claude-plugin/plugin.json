@@ -1,0 +1,12 @@
+{
+  "name": "agent-loop",
+  "version": "1.0.0",
+  "description": "Run long-running autonomous tasks across multiple Claude Code sessions",
+  "author": {
+    "name": "codingawayy",
+    "email": "418400+codingawayy@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "keywords": ["agent-loop", "orchestrator", "autonomous", "background"],
+  "repository": "https://github.com/codingawayy/cc-marketplace"
+}
