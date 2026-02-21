@@ -205,6 +205,9 @@ DIRECTIVE_EOF
 (No learnings yet — this is the first iteration.)
 LEARNINGS_EOF
 
+  # Seed run state
+  echo '{"status":"in_progress"}' > "$RUN_DIR/run.json"
+
   # Save config
   GOAL_JSON=$(echo -n "$GOAL" | jq -Rs '.')
   BRANCH_JSON=$(echo -n "$BRANCH" | jq -Rs '.')
@@ -227,8 +230,14 @@ fi
 # ─────────────────────────────────────────────────────────────────────────────
 DIRECTIVE="$RUN_DIR/directive.md"
 LEARNINGS="$RUN_DIR/learnings.md"
+RUN_STATE="$RUN_DIR/run.json"
 ITERATIONS_DIR="$RUN_DIR/iterations"
 RULES_FILE="$SCRIPT_DIR/rules.md"
+
+# Ensure run.json exists (backward compat for runs created before this feature)
+if [[ ! -f "$RUN_STATE" ]]; then
+  echo '{"status":"in_progress"}' > "$RUN_STATE"
+fi
 
 # Read rules for injection into system prompt
 RULES_CONTENT=$(cat "$RULES_FILE")
@@ -240,7 +249,7 @@ _win_path() {
 
 # Print resume command on any exit (except when the run is DONE)
 _on_exit() {
-  if [[ -f "$DIRECTIVE" ]] && grep -q "DONE" "$DIRECTIVE" 2>/dev/null; then
+  if [[ -f "$RUN_STATE" ]] && jq -e '.status == "done"' "$RUN_STATE" >/dev/null 2>&1; then
     return
   fi
   local win_script
@@ -405,11 +414,13 @@ for i in $(seq "$START_ITERATION" "$MAX_ITERATIONS"); do
   PROMPT="You are iteration $i of an agent loop. Your working files are:
 - Directive: $DIRECTIVE
 - Learnings: $LEARNINGS
+- Run state: $RUN_STATE
 
-Read both files now, then do the work described in the directive's 'Current Task' section.
+Read the directive and learnings files now, then do the work described in the directive's 'Current Task' section.
 Before you finish, you MUST:
 1. Rewrite $DIRECTIVE with updated progress and next steps
-2. Append any new discoveries to $LEARNINGS under '## Iteration $i'"
+2. Append any new discoveries to $LEARNINGS under '## Iteration $i'
+3. If every task from the original Goal is complete, update $RUN_STATE to set status to \"done\" — do not invent follow-up work"
 
   # Run Claude
   ITER_START=$(date +%s)
@@ -469,23 +480,14 @@ Before you finish, you MUST:
   TOTAL_COST=$(echo "$TOTAL_COST + $ITER_COST" | bc 2>/dev/null || echo "$TOTAL_COST")
   echo "  Duration: $ITER_DURATION | Cost: \$$ITER_COST (total: \$$TOTAL_COST)"
 
-  # Check if done
-  if grep -q "^DONE" "$DIRECTIVE" || grep -q "Status.*DONE" "$DIRECTIVE" || grep -q "## Status" "$DIRECTIVE" && grep -A1 "## Status" "$DIRECTIVE" | grep -q "DONE"; then
+  # Check run state
+  RUN_STATUS=$(jq -r '.status // "in_progress"' "$RUN_STATE" 2>/dev/null || echo "in_progress")
+  if [[ "$RUN_STATUS" == "done" ]]; then
     echo ""
     echo "════════════════════════════════════════════════════"
     echo "  DONE after $i iterations (total cost: \$$TOTAL_COST)"
     echo "════════════════════════════════════════════════════"
     exit 0
-  fi
-
-  # Check if blocked
-  if grep -q "Status.*BLOCKED\|Status.*FAILED" "$DIRECTIVE"; then
-    echo ""
-    echo "════════════════════════════════════════════════════"
-    echo "  BLOCKED/FAILED after $i iterations"
-    echo "  Check $DIRECTIVE for details."
-    echo "════════════════════════════════════════════════════"
-    exit 1
   fi
 
   # Pause checkpoint — also triggered when the user interrupts an iteration

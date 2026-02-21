@@ -16,19 +16,21 @@ each picking up where the last one left off. Follow these rules exactly.
 
 ## Before Exiting
 
-6. **Rewrite `directive.md`** (do not append — replace the entire file) with:
+6. **If every task in the Goal has been completed and verified**, update `run.json` to set status to `"done"`:
+   ```json
+   {"status":"done"}
+   ```
+   Do not invent follow-up tasks, improvements, or nice-to-haves beyond the original goal.
+7. **Rewrite `directive.md`** (do not append — replace the entire file) with:
     - The same Goal section (unchanged)
-    - Updated Status: `IN_PROGRESS`, `DONE`, `BLOCKED`, or `FAILED`
-    - Updated Progress checklist
-    - A new "Current Task" section describing what the next iteration should do
+    - Updated Status: `IN_PROGRESS` or `DONE`
+    - Updated Progress checklist using `- [x]` for completed items and `- [ ]` for remaining items
+    - Current Task:
+      - If done: write "All tasks complete — no further action needed."
+      - Otherwise: describe what the next iteration should do.
     - Updated Iteration History table with a row for what you accomplished
-7. **Append to `learnings.md`** any new discoveries under a heading `## Iteration N` (use the iteration number from your prompt). Only add genuinely useful information — not trivial observations.
-8. If `learnings.md` exceeds approximately 100 lines, consolidate older iteration entries into a `## Summary` section at the top, keeping only the most important points. Remove redundant or superseded details from older entries.
-
-## Completion
-
-9. When the goal is fully achieved, set Status to `DONE` in `directive.md`.
-10. When the goal cannot be completed (missing permissions, external dependency, unclear requirements), set Status to `BLOCKED` and explain why in the Current Task section.
+8. **Append to `learnings.md`** any new discoveries under a heading `## Iteration N` (use the iteration number from your prompt). Only add genuinely useful information — not trivial observations.
+9. If `learnings.md` exceeds approximately 100 lines, consolidate older iteration entries into a `## Summary` section at the top, keeping only the most important points. Remove redundant or superseded details from older entries.
 
 ## Important
 
@@ -36,3 +38,4 @@ each picking up where the last one left off. Follow these rules exactly.
 - Do NOT push to remote — only commit locally.
 - Keep your commits small and focused. Commit after each logical unit of work.
 - If a previous iteration's approach failed (noted in learnings), try a different approach.
+- When all Progress items are checked (`[x]`), you MUST update `run.json` to `"done"`. Do not add new unchecked items to justify continuing.
